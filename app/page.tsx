@@ -18,6 +18,15 @@ const POPULAR_TERMS = [
 
 const MAX_SEARCH_RESULTS = 12;
 
+/*
+ * Tipo de cambio de referencia:
+ * 1 MXN ≈ 0.0586814 USD
+ * Consultado: 2026-08-28
+ *
+ * Es únicamente una referencia visual.
+ */
+const MXN_TO_USD = 0.0586814;
+
 const EXACT_RELATIONS = new Set([
   "same-active-ingredients-strength-form-quantity",
   "exact-active-ingredients-strength-form-quantity",
@@ -631,16 +640,6 @@ export default function Home() {
      PRIMARY OFFER
      ======================================================= */
 
-  /*
-   * Si el usuario buscó una marca:
-   *
-   * → mostramos primero el mejor precio DE ESA MARCA.
-   *
-   * Si buscó por ingrediente:
-   *
-   * → mostramos directamente el mejor precio general.
-   */
-
   const primaryOffer =
     searchedBrand && searchedBrandBestPrice
       ? searchedBrandBestPrice
@@ -1077,12 +1076,21 @@ export default function Home() {
                             </span>
 
                             {cheapest && (
-                              <small>
-                                Desde $
-                                {cheapest.price.toFixed(
-                                  2,
-                                )}
-                              </small>
+                              <>
+                                <small>
+                                  Desde $
+                                  {cheapest.price.toFixed(
+                                    2,
+                                  )}{" "}
+                                  MXN
+                                </small>
+
+                                <UsdReference
+                                  amountMxn={
+                                    cheapest.price
+                                  }
+                                />
+                              </>
                             )}
                           </div>
 
@@ -1176,7 +1184,26 @@ export default function Home() {
                     {primaryOffer.price.toFixed(
                       2,
                     )}
+
+                    <small
+                      style={{
+                        marginLeft: "8px",
+                        fontSize: "0.22em",
+                        fontWeight: 700,
+                        opacity: 0.68,
+                        letterSpacing: "0.06em",
+                      }}
+                    >
+                      MXN
+                    </small>
                   </div>
+
+                  <UsdReference
+                    amountMxn={
+                      primaryOffer.price
+                    }
+                    prominent
+                  />
 
                   <p className="best-product">
                     {
@@ -1210,7 +1237,8 @@ export default function Home() {
                     <strong>
                       {formatPricePerUnit(
                         primaryOffer,
-                      )}
+                      )}{" "}
+                      MXN
                     </strong>
 
                     <small>
@@ -1280,7 +1308,8 @@ export default function Home() {
                               Ahorras $
                               {alternativeSavings.amount.toFixed(
                                 2,
-                              )}
+                              )}{" "}
+                              MXN
                             </span>
                           </div>
 
@@ -1310,13 +1339,21 @@ export default function Home() {
                           $
                           {cheaperAlternative.price.toFixed(
                             2,
-                          )}
+                          )}{" "}
+                          MXN
                         </strong>
+
+                        <UsdReference
+                          amountMxn={
+                            cheaperAlternative.price
+                          }
+                        />
 
                         <span>
                           {formatPricePerUnit(
                             cheaperAlternative,
                           )}{" "}
+                          MXN{" "}
                           {cheaperAlternative.pricePerUnitLabel ??
                             getDefaultUnitLabel(
                               selectedMedication,
@@ -1328,7 +1365,7 @@ export default function Home() {
                           {alternativeSavings.amount.toFixed(
                             2,
                           )}{" "}
-                          menos
+                          MXN menos
                         </small>
                       </div>
 
@@ -1494,6 +1531,12 @@ export default function Home() {
               Compara precios, no
               tratamientos.
             </span>
+
+            <span>
+              Precios en MXN. Conversión a
+              USD aproximada y sólo como
+              referencia.
+            </span>
           </div>
 
           <div className="footer-signature">
@@ -1584,12 +1627,21 @@ function RelatedMedications({
                 </span>
 
                 {cheapest && (
-                  <small>
-                    Desde $
-                    {cheapest.price.toFixed(
-                      2,
-                    )}
-                  </small>
+                  <>
+                    <small>
+                      Desde $
+                      {cheapest.price.toFixed(
+                        2,
+                      )}{" "}
+                      MXN
+                    </small>
+
+                    <UsdReference
+                      amountMxn={
+                        cheapest.price
+                      }
+                    />
+                  </>
                 )}
               </div>
 
@@ -1709,7 +1761,8 @@ function OfferCard({
                 Antes $
                 {offer.regularPrice.toFixed(
                   2,
-                )}
+                )}{" "}
+                MXN
               </div>
             )}
         </div>
@@ -1717,13 +1770,20 @@ function OfferCard({
 
       <div className="offer-price-area">
         <strong>
-          ${offer.price.toFixed(2)}
+          ${offer.price.toFixed(2)} MXN
         </strong>
+
+        <UsdReference
+          amountMxn={
+            offer.price
+          }
+        />
 
         <span>
           {formatPricePerUnit(
             offer,
           )}{" "}
+          MXN{" "}
           {offer.pricePerUnitLabel ??
             getDefaultUnitLabel(
               medication,
@@ -1737,7 +1797,7 @@ function OfferCard({
               {difference.toFixed(
                 2,
               )}{" "}
-              más
+              MXN más
             </small>
           )}
 
@@ -1746,7 +1806,8 @@ function OfferCard({
             Ahorras $
             {savingsFromRegularPrice.toFixed(
               2,
-            )}
+            )}{" "}
+            MXN
           </small>
         )}
       </div>
@@ -1761,6 +1822,40 @@ function OfferCard({
         <span>↗</span>
       </a>
     </article>
+  );
+}
+
+/* =========================================================
+   USD REFERENCE
+   ========================================================= */
+
+function UsdReference({
+  amountMxn,
+  prominent = false,
+}: {
+  amountMxn: number;
+  prominent?: boolean;
+}) {
+  return (
+    <small
+      style={{
+        display: "block",
+        marginTop: prominent
+          ? "4px"
+          : "2px",
+        marginBottom: prominent
+          ? "10px"
+          : "0",
+        fontSize: prominent
+          ? "12px"
+          : "10px",
+        lineHeight: 1.3,
+        fontWeight: 500,
+        opacity: 0.62,
+      }}
+    >
+      ≈ {formatUsdFromMxn(amountMxn)}
+    </small>
   );
 }
 
@@ -2104,6 +2199,15 @@ function formatPricePerUnit(
   return `$${offer.pricePerUnit.toFixed(
     2,
   )}`;
+}
+
+function formatUsdFromMxn(
+  mxn: number,
+) {
+  const usd =
+    mxn * MXN_TO_USD;
+
+  return `US$${usd.toFixed(2)}`;
 }
 
 /* =========================================================
