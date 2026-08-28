@@ -1,15 +1,15 @@
 {
   "project": "Entre farmacias",
-  "schemaVersion": 4,
-  "datasetVersion": "4.0.0-strict-price-coverage",
+  "schemaVersion": 5,
+  "datasetVersion": "5.0.0-expanded-mexico-otc-brand-generic",
   "updatedAt": "2026-08-28",
   "currency": "MXN",
   "minimumOffersPerMedication": 2,
   "catalogPolicy": {
     "publicOnly": true,
     "prescriptionRequired": false,
-    "selectionBasis": "Catálogo ampliado: conserva las 50 presentaciones verificadas originales y agrega candidatos OTC/de libre venta y autocuidado de alta notoriedad en México para ampliar búsqueda por marca e ingrediente. Los candidatos nuevos no deben publicarse con precio hasta verificar condición de venta, presentación y al menos dos ofertas.",
-    "publicationRule": "El arreglo medications sólo contiene entradas con al menos dos ofertas de precio. Entradas aún incompletas se mueven a researchQueue y nunca deben mostrarse como resultados públicos.",
+    "selectionBasis": "Catálogo OTC/de libre venta ampliado para México. Prioriza medicamentos y marcas de alta notoriedad y uso común en farmacia, con comparaciones marca-genérico cuando coinciden principios activos, concentración, forma y cantidad. No se presenta como un ranking oficial nacional de ventas.",
+    "publicationRule": "El arreglo medications sólo contiene entradas con al menos dos ofertas de precio verificadas. Entradas con menos ofertas o conflictos de condición de venta permanecen en researchQueue.",
     "noPendingEntries": true,
     "brandSearchEnabled": true,
     "ingredientRelationshipSearchEnabled": true,
@@ -17,7 +17,9 @@
     "safeAlternativeWording": "Mismos principios activos, concentración y presentación.",
     "candidateEntriesAllowed": false,
     "candidateRule": "verificationStatus=needs-offer-and-otc-status-verification y publicEligible=false hasta validación.",
-    "priceIntegrityRule": "No se inventan ni estiman precios. Cada oferta pública debe corresponder a un precio observado en una fuente minorista identificable."
+    "priceIntegrityRule": "No se inventan ni estiman precios. Cada oferta pública debe corresponder a un precio observado en una fuente minorista identificable.",
+    "brandVsGenericRule": "Si una marca tiene una alternativa con los mismos principios activos, concentración, forma y cantidad, se relaciona mediante relatedMedicationIds para que la interfaz pueda mostrar una opción de menor precio. La relación no afirma intercambiabilidad terapéutica.",
+    "outlierRule": "Precios anómalos o inconsistentes se excluyen aunque aparezcan en un retailer hasta poder confirmarlos."
   },
   "location": {
     "scope": "precio publicado en línea",
@@ -854,13 +856,13 @@
       "relatedMedicationIds": [
         {
           "medicationId": "advil-400mg-10-capsulas",
-          "relation": "same-active-ingredients-strength-different-form",
-          "label": "Mismos principios activos y concentración, otra forma"
+          "relation": "same-active-ingredients-strength-different-presentation",
+          "label": "Mismos principios activos y concentración, otra presentación"
         },
         {
           "medicationId": "advil-400mg-20-capsulas",
-          "relation": "same-active-ingredients-strength-different-form",
-          "label": "Mismos principios activos y concentración, otra forma"
+          "relation": "same-active-ingredients-strength-different-presentation",
+          "label": "Mismos principios activos y concentración, otra presentación"
         },
         {
           "medicationId": "motrin-400mg-20-tabletas",
@@ -975,8 +977,8 @@
       "relatedMedicationIds": [
         {
           "medicationId": "ibuprofeno-400mg-20-tabletas",
-          "relation": "same-active-ingredients-strength-different-form",
-          "label": "Mismos principios activos y concentración, otra forma"
+          "relation": "same-active-ingredients-strength-different-presentation",
+          "label": "Mismos principios activos y concentración, otra presentación"
         },
         {
           "medicationId": "advil-400mg-20-capsulas",
@@ -1092,8 +1094,8 @@
       "relatedMedicationIds": [
         {
           "medicationId": "ibuprofeno-400mg-20-tabletas",
-          "relation": "same-active-ingredients-strength-different-form",
-          "label": "Mismos principios activos y concentración, otra forma"
+          "relation": "same-active-ingredients-strength-different-presentation",
+          "label": "Mismos principios activos y concentración, otra presentación"
         },
         {
           "medicationId": "advil-400mg-10-capsulas",
@@ -3894,7 +3896,13 @@
         "prohibitedClaim": "No afirmar que dos productos son 'lo mismo' ni que son intercambiables.",
         "safeRecommendationCopy": "También encontramos opciones con los mismos principios activos, concentración y presentación."
       },
-      "relatedMedicationIds": [],
+      "relatedMedicationIds": [
+        {
+          "medicationId": "omeprazol-20mg-14-capsulas",
+          "relation": "same-active-ingredients-strength-form-quantity",
+          "label": "Mismo principio activo, concentración, forma y cantidad"
+        }
+      ],
       "publicEligible": true
     },
     {
@@ -4000,8 +4008,8 @@
       "relatedMedicationIds": [
         {
           "medicationId": "riopan-gel-250ml",
-          "relation": "same-active-ingredients-strength-different-presentation",
-          "label": "Mismos principios activos y concentración, otra presentación"
+          "relation": "same-active-ingredients-strength-form-different-quantity",
+          "label": "Mismos principios activos y concentración, otra cantidad"
         }
       ],
       "publicEligible": true
@@ -6012,8 +6020,8 @@
       "relatedMedicationIds": [
         {
           "medicationId": "loperamida-2mg-12-tabletas",
-          "relation": "same-active-ingredient-strength-different-quantity",
-          "label": "Mismo principio activo y concentración, otra cantidad"
+          "relation": "same-active-ingredients-strength-form-different-quantity",
+          "label": "Mismos principios activos y concentración, otra cantidad"
         },
         {
           "medicationId": "loperamida-2mg-20-tabletas",
@@ -6513,8 +6521,8 @@
       "relatedMedicationIds": [
         {
           "medicationId": "broncolin-verde-250ml",
-          "relation": "same-active-ingredients-strength-different-presentation",
-          "label": "Mismos principios activos y concentración, otra presentación"
+          "relation": "same-active-ingredients-strength-form-different-quantity",
+          "label": "Mismos principios activos y concentración, otra cantidad"
         }
       ],
       "verificationStatus": "verified-offers",
@@ -6630,8 +6638,8 @@
       "relatedMedicationIds": [
         {
           "medicationId": "broncolin-verde-140ml",
-          "relation": "same-active-ingredients-strength-different-presentation",
-          "label": "Mismos principios activos y concentración, otra presentación"
+          "relation": "same-active-ingredients-strength-form-different-quantity",
+          "label": "Mismos principios activos y concentración, otra cantidad"
         }
       ],
       "verificationStatus": "verified-offers",
@@ -6731,8 +6739,8 @@
       "relatedMedicationIds": [
         {
           "medicationId": "broncolin-azul-250ml",
-          "relation": "same-active-ingredients-strength-different-presentation",
-          "label": "Mismos principios activos y concentración, otra presentación"
+          "relation": "same-active-ingredients-strength-form-different-quantity",
+          "label": "Mismos principios activos y concentración, otra cantidad"
         },
         {
           "medicationId": "broncolin-liptulyn-140ml",
@@ -6837,8 +6845,8 @@
       "relatedMedicationIds": [
         {
           "medicationId": "broncolin-azul-140ml",
-          "relation": "same-active-ingredients-strength-different-presentation",
-          "label": "Mismos principios activos y concentración, otra presentación"
+          "relation": "same-active-ingredients-strength-form-different-quantity",
+          "label": "Mismos principios activos y concentración, otra cantidad"
         },
         {
           "medicationId": "broncolin-liptulyn-140ml",
@@ -6951,8 +6959,8 @@
       "relatedMedicationIds": [
         {
           "medicationId": "riopan-80-10mg-ml-10-sobres",
-          "relation": "same-active-ingredients-strength-different-presentation",
-          "label": "Mismos principios activos y concentración, otra presentación"
+          "relation": "same-active-ingredients-strength-form-different-quantity",
+          "label": "Mismos principios activos y concentración, otra cantidad"
         }
       ],
       "verificationStatus": "verified-offers",
@@ -7018,6 +7026,19 @@
               "availability": "listed",
               "saleCondition": "otc-retail-listing",
               "url": "https://www.farmaciasguadalajara.com/medicina/antiacidos-y-antigastricos/melox-plus-suspension-sabor-menta--360-ml.-77836.html",
+              "checkedAt": "2026-08-28"
+            },
+            {
+              "pharmacyId": "walmart",
+              "sourceName": "Melox Plus sabor menta 360 ml suspensión",
+              "sku": "00750107231037",
+              "price": 186.0,
+              "currency": "MXN",
+              "pricePerUnit": 0.52,
+              "pricePerUnitLabel": "por ml",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.walmart.com.mx/ip/melox-plus-sabor-menta-360-ml-suspension/00750107231037",
               "checkedAt": "2026-08-28"
             }
           ],
@@ -8035,8 +8056,8 @@
       "relatedMedicationIds": [
         {
           "medicationId": "desenfriol-d-24-tabletas",
-          "relation": "same-active-ingredients-strength-different-presentation",
-          "label": "Mismos principios activos y concentración, otra presentación"
+          "relation": "same-active-ingredients-strength-form-different-quantity",
+          "label": "Mismos principios activos y concentración, otra cantidad"
         }
       ],
       "verificationStatus": "verified-offers",
@@ -8166,8 +8187,8 @@
       "relatedMedicationIds": [
         {
           "medicationId": "next-500-25-5mg-10-tabletas",
-          "relation": "same-active-ingredients-strength-different-presentation",
-          "label": "Mismos principios activos y concentración, otra presentación"
+          "relation": "same-active-ingredients-strength-form-different-quantity",
+          "label": "Mismos principios activos y concentración, otra cantidad"
         }
       ],
       "verificationStatus": "verified-offers",
@@ -9160,6 +9181,1389 @@
       ],
       "verificationStatus": "verified-offers",
       "publicEligible": true
+    },
+    {
+      "id": "buscapina-10mg-24-tabletas",
+      "slug": "buscapina-10mg-24-tabletas",
+      "displayName": "Buscapina 10 mg · 24 tabletas",
+      "category": "Cólicos y dolor abdominal",
+      "searchTerms": [
+        "Buscapina",
+        "Hioscina",
+        "Butilhioscina",
+        "Butilbromuro de hioscina"
+      ],
+      "activeIngredients": [
+        {
+          "name": "Butilhioscina",
+          "strength": "10 mg"
+        }
+      ],
+      "dosageForm": "tableta",
+      "quantity": 24,
+      "unit": "tabletas",
+      "otc": true,
+      "comparisonType": "exact-commercial-product",
+      "products": [
+        {
+          "id": "buscapina-10mg-24",
+          "brand": "Buscapina",
+          "commercialName": "Buscapina 10 mg, 24 tabletas",
+          "offers": [
+            {
+              "pharmacyId": "farmacias-guadalajara",
+              "sourceName": "Buscapina 10 mg, 24 Tabletas.",
+              "sku": "1165577",
+              "price": 228.5,
+              "currency": "MXN",
+              "pricePerUnit": 9.52,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.farmaciasguadalajara.com/medicina/analgesicos/buscapina-10-mg--24-tabletas.-1165577.html",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 328.54
+            },
+            {
+              "pharmacyId": "benavides",
+              "sourceName": "Buscapina 10 mg Hioscina 24 Tabletas",
+              "sku": "1025653",
+              "price": 249.0,
+              "currency": "MXN",
+              "pricePerUnit": 10.38,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "receta-no-obligatoria",
+              "url": "https://www.benavides.com.mx/buscapina-10-mg-hioscina-24-tabletas",
+              "checkedAt": "2026-08-28"
+            },
+            {
+              "pharmacyId": "walmart",
+              "sourceName": "Buscapina 24 tabletas Hioscina 10 mg",
+              "sku": "00750116501164",
+              "price": 251.0,
+              "currency": "MXN",
+              "pricePerUnit": 10.46,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.walmart.com.mx/ip/buscapina-24-tabletas-hioscina-10-mg/00750116501164",
+              "checkedAt": "2026-08-28"
+            }
+          ],
+          "searchAliases": [
+            "Buscapina",
+            "Buscapina 10 mg, 24 tabletas"
+          ],
+          "matchLevel": "exact-commercial-product"
+        }
+      ],
+      "ingredientSignature": "butilhioscina:10 mg",
+      "searchProfile": {
+        "brandTerms": [
+          "Buscapina"
+        ],
+        "ingredientTerms": [
+          "Butilhioscina",
+          "Butilhioscina 10 mg"
+        ],
+        "aliases": [
+          "Buscapina",
+          "Hioscina",
+          "Butilhioscina",
+          "Butilbromuro de hioscina"
+        ],
+        "presentationTerms": [
+          "tableta",
+          "24 tabletas"
+        ],
+        "normalizedText": "buscapina 10 mg 24 tabletas buscapina butilhioscina butilhioscina 10 mg buscapina hioscina butilhioscina butilbromuro de hioscina"
+      },
+      "alternativePolicy": {
+        "exactAlternativeCriteria": [
+          "same active ingredients",
+          "same strengths",
+          "same dosage form",
+          "same quantity"
+        ],
+        "exactAlternativeLabel": "Mismos principios activos, concentración, forma y cantidad",
+        "relatedPresentationLabel": "Mismos principios activos en otra presentación",
+        "prohibitedClaim": "No afirmar que dos productos son 'lo mismo' ni que son intercambiables.",
+        "safeRecommendationCopy": "También encontramos opciones con los mismos principios activos, concentración y presentación."
+      },
+      "relatedMedicationIds": [],
+      "publicEligible": true,
+      "verificationStatus": "verified-offers"
+    },
+    {
+      "id": "buscapina-fem-20-400mg-10-tabletas",
+      "slug": "buscapina-fem-20-400mg-10-tabletas",
+      "displayName": "Buscapina Fem 20/400 mg · 10 tabletas",
+      "category": "Cólicos menstruales",
+      "searchTerms": [
+        "Buscapina Fem",
+        "Buscapina",
+        "Hioscina",
+        "Butilhioscina",
+        "Ibuprofeno",
+        "Cólicos menstruales"
+      ],
+      "activeIngredients": [
+        {
+          "name": "Butilhioscina",
+          "strength": "20 mg"
+        },
+        {
+          "name": "Ibuprofeno",
+          "strength": "400 mg"
+        }
+      ],
+      "dosageForm": "tableta",
+      "quantity": 10,
+      "unit": "tabletas",
+      "otc": true,
+      "comparisonType": "exact-commercial-product",
+      "products": [
+        {
+          "id": "buscapina-fem-20-400-10",
+          "brand": "Buscapina Fem",
+          "commercialName": "Buscapina Fem 20/400 mg, 10 tabletas",
+          "offers": [
+            {
+              "pharmacyId": "farmacias-guadalajara",
+              "sourceName": "Buscapina Fem 20mg/400mg, 10 Tabletas.",
+              "sku": "1033395",
+              "price": 153.07,
+              "currency": "MXN",
+              "pricePerUnit": 15.31,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.farmaciasguadalajara.com/medicina/analgesicos/buscapina-fem-20mg-400mg--10-tabletas.-1033395.html",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 233.69
+            },
+            {
+              "pharmacyId": "benavides",
+              "sourceName": "Buscapina Fem 20 mg Hioscina/400 mg Ibuprofeno 10 Tabletas",
+              "sku": "462",
+              "price": 185.0,
+              "currency": "MXN",
+              "pricePerUnit": 18.5,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "receta-no-obligatoria",
+              "url": "https://www.benavides.com.mx/buscapina-fem-20-mg-hioscina400-mg-ibuprofeno-10-tabletas",
+              "checkedAt": "2026-08-28",
+              "promotion": "Acumula 3 piezas y recibe 1+ gratis"
+            },
+            {
+              "pharmacyId": "walmart",
+              "sourceName": "Buscapina Fem 20 mg/400 mg 10 tabletas",
+              "sku": "00750116501165",
+              "price": 145.0,
+              "currency": "MXN",
+              "pricePerUnit": 14.5,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.walmart.com.mx/ip/buscapina-fem-auxiliar-en-el-alivio-del-colico-menstrual-10-tabletas-con-hioscina-e-ibuprofeno-/00750116501165",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 171.0
+            }
+          ],
+          "searchAliases": [
+            "Buscapina Fem",
+            "Buscapina Fem 20/400 mg, 10 tabletas"
+          ],
+          "matchLevel": "exact-commercial-product"
+        }
+      ],
+      "marketSignal": {
+        "source": "Walmart México",
+        "label": "Comprado 500+ veces el mes pasado"
+      },
+      "ingredientSignature": "butilhioscina:20 mg|ibuprofeno:400 mg",
+      "searchProfile": {
+        "brandTerms": [
+          "Buscapina Fem"
+        ],
+        "ingredientTerms": [
+          "Butilhioscina",
+          "Butilhioscina 20 mg",
+          "Ibuprofeno",
+          "Ibuprofeno 400 mg"
+        ],
+        "aliases": [
+          "Buscapina Fem",
+          "Buscapina",
+          "Hioscina",
+          "Butilhioscina",
+          "Ibuprofeno",
+          "Cólicos menstruales"
+        ],
+        "presentationTerms": [
+          "tableta",
+          "10 tabletas"
+        ],
+        "normalizedText": "buscapina fem 20 400 mg 10 tabletas buscapina fem butilhioscina butilhioscina 20 mg ibuprofeno ibuprofeno 400 mg buscapina fem buscapina hioscina butilhioscina ibuprofeno colicos menstruales"
+      },
+      "alternativePolicy": {
+        "exactAlternativeCriteria": [
+          "same active ingredients",
+          "same strengths",
+          "same dosage form",
+          "same quantity"
+        ],
+        "exactAlternativeLabel": "Mismos principios activos, concentración, forma y cantidad",
+        "relatedPresentationLabel": "Mismos principios activos en otra presentación",
+        "prohibitedClaim": "No afirmar que dos productos son 'lo mismo' ni que son intercambiables.",
+        "safeRecommendationCopy": "También encontramos opciones con los mismos principios activos, concentración y presentación."
+      },
+      "relatedMedicationIds": [
+        {
+          "medicationId": "hioscina-ibuprofeno-20-400mg-10-tabletas",
+          "relation": "same-active-ingredients-strength-form-quantity",
+          "label": "Mismos principios activos, concentración, forma y cantidad"
+        }
+      ],
+      "publicEligible": true,
+      "verificationStatus": "verified-offers"
+    },
+    {
+      "id": "hioscina-ibuprofeno-20-400mg-10-tabletas",
+      "slug": "hioscina-ibuprofeno-20-400mg-10-tabletas",
+      "displayName": "Hioscina 20 mg + Ibuprofeno 400 mg · 10 tabletas",
+      "category": "Cólicos menstruales",
+      "searchTerms": [
+        "Hioscina + Ibuprofeno",
+        "Butilhioscina + Ibuprofeno",
+        "Buscapina Fem alternativa",
+        "Ariadne"
+      ],
+      "activeIngredients": [
+        {
+          "name": "Butilhioscina",
+          "strength": "20 mg"
+        },
+        {
+          "name": "Ibuprofeno",
+          "strength": "400 mg"
+        }
+      ],
+      "dosageForm": "tableta",
+      "quantity": 10,
+      "unit": "tabletas",
+      "otc": true,
+      "comparisonType": "same-active-ingredients-different-brands",
+      "products": [
+        {
+          "id": "hioscina-ibuprofeno-pharmalife-20-400-10",
+          "brand": "Pharmalife",
+          "commercialName": "Hioscina/Ibuprofeno Pharmalife 20/400 mg, 10 tabletas",
+          "offers": [
+            {
+              "pharmacyId": "farmacias-guadalajara",
+              "sourceName": "Hioscina/Ibuprofeno 20mg/400mg, 10 Tabletas Pharmalife.",
+              "sku": "1377248",
+              "price": 53.0,
+              "currency": "MXN",
+              "pricePerUnit": 5.3,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.farmaciasguadalajara.com/medicina/analgesicos/hioscina-ibuprofeno-20mg-400mg--10-tabletas-pharmalife.-1377248.html",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 150.14
+            }
+          ],
+          "searchAliases": [
+            "Pharmalife",
+            "Hioscina/Ibuprofeno Pharmalife 20/400 mg, 10 tabletas"
+          ],
+          "matchLevel": "exact-commercial-product"
+        },
+        {
+          "id": "hioscina-ibuprofeno-benavides-20-400-10",
+          "brand": "Genérico de Marca",
+          "commercialName": "Hioscina/Ibuprofeno Genérico de Marca 20/400 mg, 10 tabletas",
+          "offers": [
+            {
+              "pharmacyId": "benavides",
+              "sourceName": "Genérico de Marca 20 mg/400 mg Hioscina, Ibuprofeno 10 Tabletas",
+              "sku": "1039757",
+              "price": 110.0,
+              "currency": "MXN",
+              "pricePerUnit": 11.0,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "receta-no-obligatoria",
+              "url": "https://www.benavides.com.mx/generico-de-marca-20-mg-400-mg-hioscina-ibuprofeno-10-ud-tabletas",
+              "checkedAt": "2026-08-28",
+              "promotion": "Segunda pieza al 50% de descuento"
+            }
+          ],
+          "searchAliases": [
+            "Genérico de Marca",
+            "Hioscina/Ibuprofeno Genérico de Marca 20/400 mg, 10 tabletas"
+          ],
+          "matchLevel": "exact-commercial-product"
+        },
+        {
+          "id": "ariadne-20-400-10",
+          "brand": "Ariadne",
+          "commercialName": "Ariadne 20/400 mg, 10 tabletas",
+          "offers": [
+            {
+              "pharmacyId": "farmacias-guadalajara",
+              "sourceName": "Ariadne 20mg/400mg, 10 Tabletas.",
+              "sku": "1449850",
+              "price": 96.01,
+              "currency": "MXN",
+              "pricePerUnit": 9.6,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.farmaciasguadalajara.com/medicina/analgesicos/ariadne-20mg-400mg--10-tabletas.-1449850.html",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 220.0
+            },
+            {
+              "pharmacyId": "benavides",
+              "sourceName": "Ariadne 20 mg Hioscina/400 mg Ibuprofeno 10 Tabletas",
+              "sku": "1050790",
+              "price": 99.0,
+              "currency": "MXN",
+              "pricePerUnit": 9.9,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "receta-no-obligatoria",
+              "url": "https://www.benavides.com.mx/ariadne-20-mg-hioscina-400-mg-ibuprofeno-10-tabletas",
+              "checkedAt": "2026-08-28"
+            }
+          ],
+          "searchAliases": [
+            "Ariadne",
+            "Ariadne 20/400 mg, 10 tabletas"
+          ],
+          "matchLevel": "exact-commercial-product"
+        }
+      ],
+      "ingredientSignature": "butilhioscina:20 mg|ibuprofeno:400 mg",
+      "searchProfile": {
+        "brandTerms": [
+          "Pharmalife",
+          "Genérico de Marca",
+          "Ariadne"
+        ],
+        "ingredientTerms": [
+          "Butilhioscina",
+          "Butilhioscina 20 mg",
+          "Ibuprofeno",
+          "Ibuprofeno 400 mg"
+        ],
+        "aliases": [
+          "Hioscina + Ibuprofeno",
+          "Butilhioscina + Ibuprofeno",
+          "Buscapina Fem alternativa",
+          "Ariadne"
+        ],
+        "presentationTerms": [
+          "tableta",
+          "10 tabletas"
+        ],
+        "normalizedText": "hioscina 20 mg ibuprofeno 400 mg 10 tabletas pharmalife generico de marca ariadne butilhioscina butilhioscina 20 mg ibuprofeno ibuprofeno 400 mg hioscina ibuprofeno butilhioscina ibuprofeno buscapina fem alternativa ariadne"
+      },
+      "alternativePolicy": {
+        "exactAlternativeCriteria": [
+          "same active ingredients",
+          "same strengths",
+          "same dosage form",
+          "same quantity"
+        ],
+        "exactAlternativeLabel": "Mismos principios activos, concentración, forma y cantidad",
+        "relatedPresentationLabel": "Mismos principios activos en otra presentación",
+        "prohibitedClaim": "No afirmar que dos productos son 'lo mismo' ni que son intercambiables.",
+        "safeRecommendationCopy": "También encontramos opciones con los mismos principios activos, concentración y presentación."
+      },
+      "relatedMedicationIds": [
+        {
+          "medicationId": "buscapina-fem-20-400mg-10-tabletas",
+          "relation": "same-active-ingredients-strength-form-quantity",
+          "label": "Mismos principios activos, concentración, forma y cantidad"
+        }
+      ],
+      "publicEligible": true,
+      "verificationStatus": "verified-offers"
+    },
+    {
+      "id": "buscapina-duo-10-500mg-10-tabletas",
+      "slug": "buscapina-duo-10-500mg-10-tabletas",
+      "displayName": "Buscapina Duo 10/500 mg · 10 tabletas",
+      "category": "Cólicos y dolor abdominal",
+      "searchTerms": [
+        "Buscapina Duo",
+        "Hioscina",
+        "Butilhioscina",
+        "Paracetamol"
+      ],
+      "activeIngredients": [
+        {
+          "name": "Butilhioscina",
+          "strength": "10 mg"
+        },
+        {
+          "name": "Paracetamol",
+          "strength": "500 mg"
+        }
+      ],
+      "dosageForm": "tableta",
+      "quantity": 10,
+      "unit": "tabletas",
+      "otc": true,
+      "comparisonType": "exact-commercial-product",
+      "products": [
+        {
+          "id": "buscapina-duo-10-500-10",
+          "brand": "Buscapina Duo",
+          "commercialName": "Buscapina Duo 10/500 mg, 10 tabletas",
+          "offers": [
+            {
+              "pharmacyId": "farmacias-guadalajara",
+              "sourceName": "Buscapina Duo 10mg/500mg, 10 Tabletas.",
+              "sku": "1324225",
+              "price": 131.55,
+              "currency": "MXN",
+              "pricePerUnit": 13.16,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.farmaciasguadalajara.com/medicina/analgesicos/buscapina-duo-10mg-500mg--10-tabletas.-1324225.html",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 200.84
+            },
+            {
+              "pharmacyId": "benavides",
+              "sourceName": "Buscapina Duo 10 mg Hioscina/500 mg Paracetamol 10 Tabletas",
+              "sku": "1042205",
+              "price": 155.0,
+              "currency": "MXN",
+              "pricePerUnit": 15.5,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "receta-no-obligatoria",
+              "url": "https://www.benavides.com.mx/buscapina-duo-10-mg-hioscina500-mg-paracetamol-10-tabletas",
+              "checkedAt": "2026-08-28"
+            }
+          ],
+          "searchAliases": [
+            "Buscapina Duo",
+            "Buscapina Duo 10/500 mg, 10 tabletas"
+          ],
+          "matchLevel": "exact-commercial-product"
+        }
+      ],
+      "ingredientSignature": "butilhioscina:10 mg|paracetamol:500 mg",
+      "searchProfile": {
+        "brandTerms": [
+          "Buscapina Duo"
+        ],
+        "ingredientTerms": [
+          "Butilhioscina",
+          "Butilhioscina 10 mg",
+          "Paracetamol",
+          "Paracetamol 500 mg"
+        ],
+        "aliases": [
+          "Buscapina Duo",
+          "Hioscina",
+          "Butilhioscina",
+          "Paracetamol"
+        ],
+        "presentationTerms": [
+          "tableta",
+          "10 tabletas"
+        ],
+        "normalizedText": "buscapina duo 10 500 mg 10 tabletas buscapina duo butilhioscina butilhioscina 10 mg paracetamol paracetamol 500 mg buscapina duo hioscina butilhioscina paracetamol"
+      },
+      "alternativePolicy": {
+        "exactAlternativeCriteria": [
+          "same active ingredients",
+          "same strengths",
+          "same dosage form",
+          "same quantity"
+        ],
+        "exactAlternativeLabel": "Mismos principios activos, concentración, forma y cantidad",
+        "relatedPresentationLabel": "Mismos principios activos en otra presentación",
+        "prohibitedClaim": "No afirmar que dos productos son 'lo mismo' ni que son intercambiables.",
+        "safeRecommendationCopy": "También encontramos opciones con los mismos principios activos, concentración y presentación."
+      },
+      "relatedMedicationIds": [
+        {
+          "medicationId": "buscapina-duo-10-500mg-20-tabletas",
+          "relation": "same-active-ingredients-strength-form-different-quantity",
+          "label": "Mismos principios activos y concentración, otra cantidad"
+        }
+      ],
+      "publicEligible": true,
+      "verificationStatus": "verified-offers"
+    },
+    {
+      "id": "buscapina-duo-10-500mg-20-tabletas",
+      "slug": "buscapina-duo-10-500mg-20-tabletas",
+      "displayName": "Buscapina Duo 10/500 mg · 20 tabletas",
+      "category": "Cólicos y dolor abdominal",
+      "searchTerms": [
+        "Buscapina Duo",
+        "Hioscina",
+        "Butilhioscina",
+        "Paracetamol"
+      ],
+      "activeIngredients": [
+        {
+          "name": "Butilhioscina",
+          "strength": "10 mg"
+        },
+        {
+          "name": "Paracetamol",
+          "strength": "500 mg"
+        }
+      ],
+      "dosageForm": "tableta",
+      "quantity": 20,
+      "unit": "tabletas",
+      "otc": true,
+      "comparisonType": "exact-commercial-product",
+      "products": [
+        {
+          "id": "buscapina-duo-10-500-20",
+          "brand": "Buscapina Duo",
+          "commercialName": "Buscapina Duo 10/500 mg, 20 tabletas",
+          "offers": [
+            {
+              "pharmacyId": "farmacias-guadalajara",
+              "sourceName": "Buscapina Duo 10mg/500mg, 20 Tabletas.",
+              "sku": "20290",
+              "price": 165.0,
+              "currency": "MXN",
+              "pricePerUnit": 8.25,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.farmaciasguadalajara.com/medicina/analgesicos/buscapina-duo-10mg-500mg--20-tabletas.-20290.html",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 362.0
+            },
+            {
+              "pharmacyId": "benavides",
+              "sourceName": "Buscapina Duo 10 mg Hioscina/500 mg Paracetamol 20 Tabletas",
+              "sku": "61379",
+              "price": 299.0,
+              "currency": "MXN",
+              "pricePerUnit": 14.95,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "receta-no-obligatoria",
+              "url": "https://www.benavides.com.mx/buscapina-duo-10-mg-hioscina500-mg-paracetamol-20-tabletas",
+              "checkedAt": "2026-08-28"
+            }
+          ],
+          "searchAliases": [
+            "Buscapina Duo",
+            "Buscapina Duo 10/500 mg, 20 tabletas"
+          ],
+          "matchLevel": "exact-commercial-product"
+        }
+      ],
+      "ingredientSignature": "butilhioscina:10 mg|paracetamol:500 mg",
+      "searchProfile": {
+        "brandTerms": [
+          "Buscapina Duo"
+        ],
+        "ingredientTerms": [
+          "Butilhioscina",
+          "Butilhioscina 10 mg",
+          "Paracetamol",
+          "Paracetamol 500 mg"
+        ],
+        "aliases": [
+          "Buscapina Duo",
+          "Hioscina",
+          "Butilhioscina",
+          "Paracetamol"
+        ],
+        "presentationTerms": [
+          "tableta",
+          "20 tabletas"
+        ],
+        "normalizedText": "buscapina duo 10 500 mg 20 tabletas buscapina duo butilhioscina butilhioscina 10 mg paracetamol paracetamol 500 mg buscapina duo hioscina butilhioscina paracetamol"
+      },
+      "alternativePolicy": {
+        "exactAlternativeCriteria": [
+          "same active ingredients",
+          "same strengths",
+          "same dosage form",
+          "same quantity"
+        ],
+        "exactAlternativeLabel": "Mismos principios activos, concentración, forma y cantidad",
+        "relatedPresentationLabel": "Mismos principios activos en otra presentación",
+        "prohibitedClaim": "No afirmar que dos productos son 'lo mismo' ni que son intercambiables.",
+        "safeRecommendationCopy": "También encontramos opciones con los mismos principios activos, concentración y presentación."
+      },
+      "relatedMedicationIds": [
+        {
+          "medicationId": "buscapina-duo-10-500mg-10-tabletas",
+          "relation": "same-active-ingredients-strength-form-different-quantity",
+          "label": "Mismos principios activos y concentración, otra cantidad"
+        }
+      ],
+      "publicEligible": true,
+      "verificationStatus": "verified-offers"
+    },
+    {
+      "id": "omeprazol-20mg-14-capsulas",
+      "slug": "omeprazol-20mg-14-capsulas",
+      "displayName": "Omeprazol 20 mg · 14 cápsulas",
+      "category": "Acidez y reflujo",
+      "searchTerms": [
+        "Omeprazol",
+        "Losec alternativa",
+        "Genérico omeprazol"
+      ],
+      "activeIngredients": [
+        {
+          "name": "Omeprazol",
+          "strength": "20 mg"
+        }
+      ],
+      "dosageForm": "cápsula",
+      "quantity": 14,
+      "unit": "cápsulas",
+      "otc": true,
+      "comparisonType": "same-active-ingredient-different-brands",
+      "products": [
+        {
+          "id": "omeprazol-pharmalife-20-14",
+          "brand": "Pharmalife",
+          "commercialName": "Omeprazol Pharmalife 20 mg, 14 cápsulas",
+          "offers": [
+            {
+              "pharmacyId": "farmacias-guadalajara",
+              "sourceName": "Omeprazol 20 mg, 14 Cápsulas Pharmalife.",
+              "sku": "1334310",
+              "price": 27.5,
+              "currency": "MXN",
+              "pricePerUnit": 1.96,
+              "pricePerUnitLabel": "por cápsula",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.farmaciasguadalajara.com/medicina/antiacidos-y-antigastricos/omeprazol-20-mg--14-capsulas-pharmalife.-1334310.html",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 280.33
+            }
+          ],
+          "searchAliases": [
+            "Pharmalife",
+            "Omeprazol Pharmalife 20 mg, 14 cápsulas"
+          ],
+          "matchLevel": "exact-commercial-product"
+        },
+        {
+          "id": "omeprazol-medimart-20-14",
+          "brand": "Medimart",
+          "commercialName": "Omeprazol Medimart 20 mg, 14 cápsulas",
+          "offers": [
+            {
+              "pharmacyId": "walmart",
+              "sourceName": "Omeprazol 20 mg Medimart 14 cápsulas",
+              "sku": "00750149388768",
+              "price": 29.0,
+              "currency": "MXN",
+              "pricePerUnit": 2.07,
+              "pricePerUnitLabel": "por cápsula",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.walmart.com.mx/ip/omeprazol-20-mg-medimart-14-capsulas/00750149388768",
+              "checkedAt": "2026-08-28"
+            }
+          ],
+          "searchAliases": [
+            "Medimart",
+            "Omeprazol Medimart 20 mg, 14 cápsulas"
+          ],
+          "matchLevel": "exact-commercial-product"
+        },
+        {
+          "id": "omeprazol-benavides-20-14",
+          "brand": "Farmacias Benavides",
+          "commercialName": "Omeprazol Farmacias Benavides 20 mg, 14 cápsulas",
+          "offers": [
+            {
+              "pharmacyId": "benavides",
+              "sourceName": "Farmacias Benavides 20 mg Omeprazol 14 Cápsulas",
+              "sku": "1038526",
+              "price": 85.0,
+              "currency": "MXN",
+              "pricePerUnit": 6.07,
+              "pricePerUnitLabel": "por cápsula",
+              "availability": "listed",
+              "saleCondition": "receta-no-obligatoria",
+              "url": "https://www.benavides.com.mx/farmacias-benavides-20-mg-omeprazol-14-capsulas",
+              "checkedAt": "2026-08-28"
+            }
+          ],
+          "searchAliases": [
+            "Farmacias Benavides",
+            "Omeprazol Farmacias Benavides 20 mg, 14 cápsulas"
+          ],
+          "matchLevel": "exact-commercial-product"
+        }
+      ],
+      "ingredientSignature": "omeprazol:20 mg",
+      "searchProfile": {
+        "brandTerms": [
+          "Pharmalife",
+          "Medimart",
+          "Farmacias Benavides"
+        ],
+        "ingredientTerms": [
+          "Omeprazol",
+          "Omeprazol 20 mg"
+        ],
+        "aliases": [
+          "Omeprazol",
+          "Losec alternativa",
+          "Genérico omeprazol"
+        ],
+        "presentationTerms": [
+          "cápsula",
+          "14 cápsulas"
+        ],
+        "normalizedText": "omeprazol 20 mg 14 capsulas pharmalife medimart farmacias benavides omeprazol omeprazol 20 mg omeprazol losec alternativa generico omeprazol"
+      },
+      "alternativePolicy": {
+        "exactAlternativeCriteria": [
+          "same active ingredients",
+          "same strengths",
+          "same dosage form",
+          "same quantity"
+        ],
+        "exactAlternativeLabel": "Mismos principios activos, concentración, forma y cantidad",
+        "relatedPresentationLabel": "Mismos principios activos en otra presentación",
+        "prohibitedClaim": "No afirmar que dos productos son 'lo mismo' ni que son intercambiables.",
+        "safeRecommendationCopy": "También encontramos opciones con los mismos principios activos, concentración y presentación."
+      },
+      "relatedMedicationIds": [
+        {
+          "medicationId": "losec-a20-20mg-14-capsulas",
+          "relation": "same-active-ingredients-strength-form-quantity",
+          "label": "Mismo principio activo, concentración, forma y cantidad"
+        }
+      ],
+      "publicEligible": true,
+      "verificationStatus": "verified-offers"
+    },
+    {
+      "id": "pepto-bismol-118ml",
+      "slug": "pepto-bismol-118ml",
+      "displayName": "Pepto-Bismol · 118 ml",
+      "category": "Acidez, indigestión y diarrea",
+      "searchTerms": [
+        "Pepto-Bismol",
+        "Pepto Bismol",
+        "Subsalicilato de bismuto"
+      ],
+      "activeIngredients": [
+        {
+          "name": "Subsalicilato de bismuto",
+          "strength": "1.75 g/100 ml"
+        }
+      ],
+      "dosageForm": "suspensión oral",
+      "quantity": 118,
+      "unit": "ml",
+      "otc": true,
+      "comparisonType": "exact-commercial-product",
+      "products": [
+        {
+          "id": "pepto-bismol-118ml-original",
+          "brand": "Pepto-Bismol",
+          "commercialName": "Pepto-Bismol suspensión sabor original, 118 ml",
+          "offers": [
+            {
+              "pharmacyId": "farmacias-guadalajara",
+              "sourceName": "Pepto-Bismol Suspensión Sabor Original, 118 ml.",
+              "sku": "897540",
+              "price": 101.99,
+              "currency": "MXN",
+              "pricePerUnit": 0.86,
+              "pricePerUnitLabel": "por ml",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.farmaciasguadalajara.com/medicina/antidiarreicos/pepto-bismol-suspension-sabor-original--118-ml.-897540.html",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 191.0
+            },
+            {
+              "pharmacyId": "benavides",
+              "sourceName": "Pepto-Bismol 1.750 g/100 ml Subsalicilato de Bismuto 118 ml",
+              "sku": "736716",
+              "price": 139.0,
+              "currency": "MXN",
+              "pricePerUnit": 1.18,
+              "pricePerUnitLabel": "por ml",
+              "availability": "listed",
+              "saleCondition": "receta-no-obligatoria",
+              "url": "https://www.benavides.com.mx/pepto-bismol-1750-g100-ml-subsalicilato-de-bismuto-118-ml-frasco",
+              "checkedAt": "2026-08-28"
+            },
+            {
+              "pharmacyId": "walmart",
+              "sourceName": "Pepto-Bismol Suspensión Sabor Original 118 ml",
+              "sku": "00002080075306",
+              "price": 117.0,
+              "currency": "MXN",
+              "pricePerUnit": 0.99,
+              "pricePerUnitLabel": "por ml",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.walmart.com.mx/ip/pepto-bismol-suspension-alivio-para-el-malestar-estomacal-sabor-original-118-ml/00002080075306",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 145.0
+            }
+          ],
+          "searchAliases": [
+            "Pepto-Bismol",
+            "Pepto-Bismol suspensión sabor original, 118 ml"
+          ],
+          "matchLevel": "exact-commercial-product"
+        }
+      ],
+      "ingredientSignature": "subsalicilato de bismuto:1 75 g 100 ml",
+      "searchProfile": {
+        "brandTerms": [
+          "Pepto-Bismol"
+        ],
+        "ingredientTerms": [
+          "Subsalicilato de bismuto",
+          "Subsalicilato de bismuto 1.75 g/100 ml"
+        ],
+        "aliases": [
+          "Pepto-Bismol",
+          "Pepto Bismol",
+          "Subsalicilato de bismuto"
+        ],
+        "presentationTerms": [
+          "suspensión oral",
+          "118 ml"
+        ],
+        "normalizedText": "pepto bismol 118 ml pepto bismol subsalicilato de bismuto subsalicilato de bismuto 1 75 g 100 ml pepto bismol pepto bismol subsalicilato de bismuto"
+      },
+      "alternativePolicy": {
+        "exactAlternativeCriteria": [
+          "same active ingredients",
+          "same strengths",
+          "same dosage form",
+          "same quantity"
+        ],
+        "exactAlternativeLabel": "Mismos principios activos, concentración, forma y cantidad",
+        "relatedPresentationLabel": "Mismos principios activos en otra presentación",
+        "prohibitedClaim": "No afirmar que dos productos son 'lo mismo' ni que son intercambiables.",
+        "safeRecommendationCopy": "También encontramos opciones con los mismos principios activos, concentración y presentación."
+      },
+      "relatedMedicationIds": [
+        {
+          "medicationId": "pepto-bismol-original-236ml",
+          "relation": "same-active-ingredients-strength-different-presentation",
+          "label": "Mismos principios activos y concentración, otra presentación"
+        }
+      ],
+      "publicEligible": true,
+      "verificationStatus": "verified-offers"
+    },
+    {
+      "id": "graneodin-b-10mg-24-pastillas",
+      "slug": "graneodin-b-10mg-24-pastillas",
+      "displayName": "Graneodín B 10 mg · 24 pastillas",
+      "category": "Dolor de garganta",
+      "searchTerms": [
+        "Graneodín",
+        "Graneodin",
+        "Graneodín B",
+        "Benzocaína",
+        "Dolor de garganta"
+      ],
+      "activeIngredients": [
+        {
+          "name": "Benzocaína",
+          "strength": "10 mg"
+        }
+      ],
+      "dosageForm": "pastilla para disolver",
+      "quantity": 24,
+      "unit": "pastillas",
+      "otc": true,
+      "comparisonType": "exact-commercial-product",
+      "products": [
+        {
+          "id": "graneodin-b-miel-limon-24",
+          "brand": "Graneodín B",
+          "commercialName": "Graneodín B 10 mg sabor miel-limón, 24 pastillas",
+          "offers": [
+            {
+              "pharmacyId": "farmacias-guadalajara",
+              "sourceName": "Graneodín B Sabor Miel Limón, 24 Pastillas.",
+              "sku": "901008",
+              "price": 151.91,
+              "currency": "MXN",
+              "pricePerUnit": 6.33,
+              "pricePerUnitLabel": "por pastilla",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.farmaciasguadalajara.com/medicina/vias-respiratorias/graneodin-b-sabor-miel-limon--24-pastillas.-901008.html",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 202.55
+            },
+            {
+              "pharmacyId": "benavides",
+              "sourceName": "Graneodin B 10 mg Benzocaína Sabor Miel-Limón 24 Pastillas",
+              "sku": "752177",
+              "price": 195.0,
+              "currency": "MXN",
+              "pricePerUnit": 8.12,
+              "pricePerUnitLabel": "por pastilla",
+              "availability": "listed",
+              "saleCondition": "receta-no-obligatoria",
+              "url": "https://www.benavides.com.mx/graneodin-b-10-mg-benzocaina-sabor-miel-limon-24-ud-pastillas",
+              "checkedAt": "2026-08-28"
+            },
+            {
+              "pharmacyId": "walmart",
+              "sourceName": "Graneodín B Benzocaína 10 mg sabor miel limón 24 pastillas",
+              "sku": "00750109540905",
+              "price": 108.0,
+              "currency": "MXN",
+              "pricePerUnit": 4.5,
+              "pricePerUnitLabel": "por pastilla",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.walmart.com.mx/ip/graneodin-b-benzocaina-10-mg-sabor-miel-limon-24-pastillas/00750109540905",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 156.0
+            }
+          ],
+          "searchAliases": [
+            "Graneodín B",
+            "Graneodín B 10 mg sabor miel-limón, 24 pastillas"
+          ],
+          "matchLevel": "exact-commercial-product"
+        }
+      ],
+      "marketSignal": {
+        "source": "Walmart México",
+        "label": "Comprado 500+ veces el mes pasado"
+      },
+      "ingredientSignature": "benzocaina:10 mg",
+      "searchProfile": {
+        "brandTerms": [
+          "Graneodín B"
+        ],
+        "ingredientTerms": [
+          "Benzocaína",
+          "Benzocaína 10 mg"
+        ],
+        "aliases": [
+          "Graneodín",
+          "Graneodin",
+          "Graneodín B",
+          "Benzocaína",
+          "Dolor de garganta"
+        ],
+        "presentationTerms": [
+          "pastilla para disolver",
+          "24 pastillas"
+        ],
+        "normalizedText": "graneodin b 10 mg 24 pastillas graneodin b benzocaina benzocaina 10 mg graneodin graneodin graneodin b benzocaina dolor de garganta"
+      },
+      "alternativePolicy": {
+        "exactAlternativeCriteria": [
+          "same active ingredients",
+          "same strengths",
+          "same dosage form",
+          "same quantity"
+        ],
+        "exactAlternativeLabel": "Mismos principios activos, concentración, forma y cantidad",
+        "relatedPresentationLabel": "Mismos principios activos en otra presentación",
+        "prohibitedClaim": "No afirmar que dos productos son 'lo mismo' ni que son intercambiables.",
+        "safeRecommendationCopy": "También encontramos opciones con los mismos principios activos, concentración y presentación."
+      },
+      "relatedMedicationIds": [],
+      "publicEligible": true,
+      "verificationStatus": "verified-offers"
+    },
+    {
+      "id": "espaven-enzimatico-50-tabletas",
+      "slug": "espaven-enzimatico-50-tabletas",
+      "displayName": "Espavén Enzimático · 50 tabletas",
+      "category": "Digestión y gases",
+      "searchTerms": [
+        "Espavén",
+        "Espaven",
+        "Espavén Enzimático",
+        "Pancreatina",
+        "Dimeticona"
+      ],
+      "activeIngredients": [
+        {
+          "name": "Pancreatina",
+          "strength": "según empaque"
+        },
+        {
+          "name": "Dimeticona",
+          "strength": "según empaque"
+        },
+        {
+          "name": "Aspergillus niger",
+          "strength": "según empaque"
+        }
+      ],
+      "dosageForm": "tableta",
+      "quantity": 50,
+      "unit": "tabletas",
+      "otc": true,
+      "comparisonType": "exact-commercial-product",
+      "products": [
+        {
+          "id": "espaven-enzimatico-50",
+          "brand": "Espavén Enzimático",
+          "commercialName": "Espavén Enzimático, 50 tabletas",
+          "offers": [
+            {
+              "pharmacyId": "farmacias-guadalajara",
+              "sourceName": "Espavén Enzimático, 50 Tabletas.",
+              "sku": "915777",
+              "price": 324.51,
+              "currency": "MXN",
+              "pricePerUnit": 6.49,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.farmaciasguadalajara.com/medicina/enzimas-digestivas/espaven-enzimatico--50-tabletas.-915777.html",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 502.11
+            },
+            {
+              "pharmacyId": "benavides",
+              "sourceName": "Espavén Enzimático Aspergillus Niger/Dimeticona/Pancreatina 50 Tabletas",
+              "sku": "816639",
+              "price": 288.15,
+              "currency": "MXN",
+              "pricePerUnit": 5.76,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "receta-no-obligatoria",
+              "url": "https://www.benavides.com.mx/espaven-enzimatico-aspergillus-nigerdimeticonapancreatina-50-tabletas",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 339.0
+            },
+            {
+              "pharmacyId": "walmart",
+              "sourceName": "Espavén enzimático, 50 tabletas",
+              "sku": "00750112296302",
+              "price": 428.0,
+              "currency": "MXN",
+              "pricePerUnit": 8.56,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.walmart.com.mx/ip/espaven-enzimatico-50-tabletas/00750112296302",
+              "checkedAt": "2026-08-28"
+            }
+          ],
+          "searchAliases": [
+            "Espavén Enzimático",
+            "Espavén Enzimático, 50 tabletas"
+          ],
+          "matchLevel": "exact-commercial-product"
+        }
+      ],
+      "ingredientSignature": "aspergillus niger:segun empaque|dimeticona:segun empaque|pancreatina:segun empaque",
+      "searchProfile": {
+        "brandTerms": [
+          "Espavén Enzimático"
+        ],
+        "ingredientTerms": [
+          "Pancreatina",
+          "Pancreatina según empaque",
+          "Dimeticona",
+          "Dimeticona según empaque",
+          "Aspergillus niger",
+          "Aspergillus niger según empaque"
+        ],
+        "aliases": [
+          "Espavén",
+          "Espaven",
+          "Espavén Enzimático",
+          "Pancreatina",
+          "Dimeticona"
+        ],
+        "presentationTerms": [
+          "tableta",
+          "50 tabletas"
+        ],
+        "normalizedText": "espaven enzimatico 50 tabletas espaven enzimatico pancreatina pancreatina segun empaque dimeticona dimeticona segun empaque aspergillus niger aspergillus niger segun empaque espaven espaven espaven enzimatico pancreatina dimeticona"
+      },
+      "alternativePolicy": {
+        "exactAlternativeCriteria": [
+          "same active ingredients",
+          "same strengths",
+          "same dosage form",
+          "same quantity"
+        ],
+        "exactAlternativeLabel": "Mismos principios activos, concentración, forma y cantidad",
+        "relatedPresentationLabel": "Mismos principios activos en otra presentación",
+        "prohibitedClaim": "No afirmar que dos productos son 'lo mismo' ni que son intercambiables.",
+        "safeRecommendationCopy": "También encontramos opciones con los mismos principios activos, concentración y presentación."
+      },
+      "relatedMedicationIds": [],
+      "publicEligible": true,
+      "verificationStatus": "verified-offers"
+    },
+    {
+      "id": "diclofenaco-gel-1-16-60g",
+      "slug": "diclofenaco-gel-1-16-60g",
+      "displayName": "Diclofenaco gel 1.16% · 60 g",
+      "category": "Dolor e inflamación",
+      "searchTerms": [
+        "Diclofenaco",
+        "Diclofenaco gel",
+        "Voltaren alternativa"
+      ],
+      "activeIngredients": [
+        {
+          "name": "Diclofenaco dietilamonio",
+          "strength": "1.16%"
+        }
+      ],
+      "dosageForm": "gel",
+      "quantity": 60,
+      "unit": "g",
+      "otc": true,
+      "comparisonType": "same-active-ingredient-different-brands",
+      "products": [
+        {
+          "id": "diclofenaco-pharmalife-1-16-60",
+          "brand": "Pharmalife",
+          "commercialName": "Diclofenaco gel Pharmalife 1.16%, 60 g",
+          "offers": [
+            {
+              "pharmacyId": "farmacias-guadalajara",
+              "sourceName": "Diclofenaco Gel 1.16%, 60 gr Pharmalife.",
+              "sku": "1360868",
+              "price": 43.5,
+              "currency": "MXN",
+              "pricePerUnit": 0.72,
+              "pricePerUnitLabel": "por g",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.farmaciasguadalajara.com/medicina/antiartriticos/diclofenaco-gel-1.16---60-gr-pharmalife.-1360868.html",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 67.12
+            }
+          ],
+          "searchAliases": [
+            "Pharmalife",
+            "Diclofenaco gel Pharmalife 1.16%, 60 g"
+          ],
+          "matchLevel": "exact-commercial-product"
+        },
+        {
+          "id": "diclofenaco-benavides-1-16-60",
+          "brand": "Farmacias Benavides",
+          "commercialName": "Diclofenaco dietilamonio gel Farmacias Benavides 1.16%, 60 g",
+          "offers": [
+            {
+              "pharmacyId": "benavides",
+              "sourceName": "Farmacias Benavides 1.16 g/100 g Diclofenaco Dietilamonio Gel 60 g",
+              "sku": "1039968",
+              "price": 99.0,
+              "currency": "MXN",
+              "pricePerUnit": 1.65,
+              "pricePerUnitLabel": "por g",
+              "availability": "listed",
+              "saleCondition": "receta-no-obligatoria",
+              "url": "https://www.benavides.com.mx/farmacias-benavides-116-g100-g-diclofenaco-dietilamonio-gel-60-g",
+              "checkedAt": "2026-08-28"
+            }
+          ],
+          "searchAliases": [
+            "Farmacias Benavides",
+            "Diclofenaco dietilamonio gel Farmacias Benavides 1.16%, 60 g"
+          ],
+          "matchLevel": "exact-commercial-product"
+        }
+      ],
+      "ingredientSignature": "diclofenaco dietilamonio:1 16",
+      "searchProfile": {
+        "brandTerms": [
+          "Pharmalife",
+          "Farmacias Benavides"
+        ],
+        "ingredientTerms": [
+          "Diclofenaco dietilamonio",
+          "Diclofenaco dietilamonio 1.16%"
+        ],
+        "aliases": [
+          "Diclofenaco",
+          "Diclofenaco gel",
+          "Voltaren alternativa"
+        ],
+        "presentationTerms": [
+          "gel",
+          "60 g"
+        ],
+        "normalizedText": "diclofenaco gel 1 16 60 g pharmalife farmacias benavides diclofenaco dietilamonio diclofenaco dietilamonio 1 16 diclofenaco diclofenaco gel voltaren alternativa"
+      },
+      "alternativePolicy": {
+        "exactAlternativeCriteria": [
+          "same active ingredients",
+          "same strengths",
+          "same dosage form",
+          "same quantity"
+        ],
+        "exactAlternativeLabel": "Mismos principios activos, concentración, forma y cantidad",
+        "relatedPresentationLabel": "Mismos principios activos en otra presentación",
+        "prohibitedClaim": "No afirmar que dos productos son 'lo mismo' ni que son intercambiables.",
+        "safeRecommendationCopy": "También encontramos opciones con los mismos principios activos, concentración y presentación."
+      },
+      "relatedMedicationIds": [],
+      "publicEligible": true,
+      "verificationStatus": "verified-offers"
+    },
+    {
+      "id": "melox-noche-360ml",
+      "slug": "melox-noche-360ml",
+      "displayName": "Melox Noche · 360 ml",
+      "category": "Acidez y reflujo",
+      "searchTerms": [
+        "Melox Noche",
+        "Melox",
+        "Alginato",
+        "Antiácido"
+      ],
+      "activeIngredients": [
+        {
+          "name": "Alginato de sodio",
+          "strength": "según empaque"
+        },
+        {
+          "name": "Hidróxido de magnesio",
+          "strength": "según empaque"
+        },
+        {
+          "name": "Hidróxido de aluminio",
+          "strength": "según empaque"
+        }
+      ],
+      "dosageForm": "suspensión oral",
+      "quantity": 360,
+      "unit": "ml",
+      "otc": true,
+      "comparisonType": "exact-commercial-product",
+      "products": [
+        {
+          "id": "melox-noche-360",
+          "brand": "Melox Noche",
+          "commercialName": "Melox Noche suspensión, 360 ml",
+          "offers": [
+            {
+              "pharmacyId": "farmacias-guadalajara",
+              "sourceName": "Melox Noche Suspensión, 360 ml.",
+              "sku": "1072862",
+              "price": 323.77,
+              "currency": "MXN",
+              "pricePerUnit": 0.9,
+              "pricePerUnitLabel": "por ml",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.farmaciasguadalajara.com/medicina/antiacidos-y-antigastricos/melox-noche-suspension--360-ml.-1072862.html",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 431.69
+            },
+            {
+              "pharmacyId": "benavides",
+              "sourceName": "Melox Noche Gastritis + Reflujo Doble Acción 360 ml",
+              "sku": "1014120",
+              "price": 347.0,
+              "currency": "MXN",
+              "pricePerUnit": 0.96,
+              "pricePerUnitLabel": "por ml",
+              "availability": "listed",
+              "saleCondition": "receta-no-obligatoria",
+              "url": "https://www.benavides.com.mx/melox-noche-gastritis-reflujo-doble-accion-360-ml-frasco",
+              "checkedAt": "2026-08-28"
+            },
+            {
+              "pharmacyId": "walmart",
+              "sourceName": "Antiácido Melox Noche 360 ml suspensión",
+              "sku": "00750116500643",
+              "price": 320.0,
+              "currency": "MXN",
+              "pricePerUnit": 0.89,
+              "pricePerUnitLabel": "por ml",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.walmart.com.mx/ip/antiacido-melox-noche-alginato-magnesio-aluminio-doble-accion-360-ml-suspension/00750116500643",
+              "checkedAt": "2026-08-28"
+            }
+          ],
+          "searchAliases": [
+            "Melox Noche",
+            "Melox Noche suspensión, 360 ml"
+          ],
+          "matchLevel": "exact-commercial-product"
+        }
+      ],
+      "ingredientSignature": "alginato de sodio:segun empaque|hidroxido de aluminio:segun empaque|hidroxido de magnesio:segun empaque",
+      "searchProfile": {
+        "brandTerms": [
+          "Melox Noche"
+        ],
+        "ingredientTerms": [
+          "Alginato de sodio",
+          "Alginato de sodio según empaque",
+          "Hidróxido de magnesio",
+          "Hidróxido de magnesio según empaque",
+          "Hidróxido de aluminio",
+          "Hidróxido de aluminio según empaque"
+        ],
+        "aliases": [
+          "Melox Noche",
+          "Melox",
+          "Alginato",
+          "Antiácido"
+        ],
+        "presentationTerms": [
+          "suspensión oral",
+          "360 ml"
+        ],
+        "normalizedText": "melox noche 360 ml melox noche alginato de sodio alginato de sodio segun empaque hidroxido de magnesio hidroxido de magnesio segun empaque hidroxido de aluminio hidroxido de aluminio segun empaque melox noche melox alginato antiacido"
+      },
+      "alternativePolicy": {
+        "exactAlternativeCriteria": [
+          "same active ingredients",
+          "same strengths",
+          "same dosage form",
+          "same quantity"
+        ],
+        "exactAlternativeLabel": "Mismos principios activos, concentración, forma y cantidad",
+        "relatedPresentationLabel": "Mismos principios activos en otra presentación",
+        "prohibitedClaim": "No afirmar que dos productos son 'lo mismo' ni que son intercambiables.",
+        "safeRecommendationCopy": "También encontramos opciones con los mismos principios activos, concentración y presentación."
+      },
+      "relatedMedicationIds": [],
+      "publicEligible": true,
+      "verificationStatus": "verified-offers"
     }
   ],
   "searchBehavior": {
@@ -9176,11 +10580,12 @@
     "safetyRule": "Nunca mostrar el texto 'es lo mismo que' ni recomendar sustituir un medicamento. Usar descripciones estructurales de coincidencia."
   },
   "catalogStats": {
-    "totalPublicEntries": 78,
-    "researchQueueEntries": 75,
+    "totalPublicEntries": 89,
+    "researchQueueEntries": 76,
     "publicEntriesWithZeroOffers": 0,
     "publicEntriesBelowMinimumOffers": 0,
-    "minimumOffersPerMedication": 2
+    "minimumOffersPerMedication": 2,
+    "newPublicEntriesInV5": 11
   },
   "researchNotes": {
     "directlyCheckedExamples": [
@@ -9735,81 +11140,6 @@
         "safeRecommendationCopy": "También encontramos opciones con los mismos principios activos, concentración y presentación."
       },
       "relatedMedicationIds": [],
-      "verificationStatus": "needs-offer-and-otc-status-verification",
-      "publicEligible": false,
-      "currentOfferCount": 0
-    },
-    {
-      "id": "pepto-bismol-118ml",
-      "slug": "pepto-bismol-118ml",
-      "displayName": "Pepto-Bismol · 118 ml",
-      "category": "Malestar gastrointestinal",
-      "searchTerms": [
-        "Pepto-Bismol",
-        "Subsalicilato de bismuto"
-      ],
-      "activeIngredients": [
-        {
-          "name": "Subsalicilato de bismuto",
-          "strength": "1.75 g/100 ml"
-        }
-      ],
-      "dosageForm": "suspensión oral",
-      "quantity": 118,
-      "unit": "ml",
-      "otc": true,
-      "comparisonType": "catalog-candidate-needs-offer-verification",
-      "products": [
-        {
-          "id": "pepto-bismol-118ml",
-          "brand": "Pepto-Bismol",
-          "commercialName": "Pepto-Bismol, 118 ml",
-          "offers": [],
-          "searchAliases": [
-            "Pepto-Bismol",
-            "Pepto-Bismol · 118 ml"
-          ],
-          "matchLevel": "catalog-candidate"
-        }
-      ],
-      "ingredientSignature": "subsalicilato de bismuto:1 75 g 100 ml",
-      "searchProfile": {
-        "brandTerms": [
-          "Pepto-Bismol"
-        ],
-        "ingredientTerms": [
-          "Subsalicilato de bismuto",
-          "Subsalicilato de bismuto 1.75 g/100 ml"
-        ],
-        "aliases": [
-          "Pepto-Bismol",
-          "Subsalicilato de bismuto"
-        ],
-        "presentationTerms": [
-          "suspensión oral",
-          "118 ml"
-        ],
-        "normalizedText": "pepto bismol 118 ml pepto bismol subsalicilato de bismuto 1 75 g 100 ml"
-      },
-      "alternativePolicy": {
-        "exactAlternativeCriteria": [
-          "same active ingredients",
-          "same strengths",
-          "same dosage form",
-          "same quantity"
-        ],
-        "exactAlternativeLabel": "Mismos principios activos, concentración, forma y cantidad",
-        "relatedPresentationLabel": "Mismos principios activos en otra presentación",
-        "prohibitedClaim": "No afirmar que dos productos son 'lo mismo' ni que son intercambiables.",
-        "safeRecommendationCopy": "También encontramos opciones con los mismos principios activos, concentración y presentación."
-      },
-      "relatedMedicationIds": [
-        {
-          "medicationId": "pepto-bismol-original-236ml",
-          "relation": "same-active-ingredients-strength-different-presentation",
-          "label": "Mismos principios activos y concentración, otra presentación"
-        }
-      ],
       "verificationStatus": "needs-offer-and-otc-status-verification",
       "publicEligible": false,
       "currentOfferCount": 0
@@ -14859,6 +16189,231 @@
       "verificationStatus": "needs-offer-and-otc-status-verification",
       "publicEligible": false,
       "currentOfferCount": 0
+    },
+    {
+      "id": "capin-bh-10mg-10-tabletas",
+      "slug": "capin-bh-10mg-10-tabletas",
+      "displayName": "Capin BH 10 mg · 10 tabletas",
+      "category": "Cólicos y dolor abdominal",
+      "searchTerms": [
+        "Capin BH",
+        "Butilhioscina",
+        "Hioscina"
+      ],
+      "activeIngredients": [
+        {
+          "name": "Butilhioscina",
+          "strength": "10 mg"
+        }
+      ],
+      "dosageForm": "tableta",
+      "quantity": 10,
+      "unit": "tabletas",
+      "otc": true,
+      "comparisonType": "catalog-candidate-needs-more-offers",
+      "products": [
+        {
+          "id": "capin-bh-10-10",
+          "brand": "Capin BH",
+          "commercialName": "Capin BH 10 mg, 10 tabletas",
+          "offers": [
+            {
+              "pharmacyId": "farmacias-guadalajara",
+              "sourceName": "Capin BH 10 mg, 10 Tabletas.",
+              "sku": "1381776",
+              "price": 62.15,
+              "currency": "MXN",
+              "pricePerUnit": 6.21,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.farmaciasguadalajara.com/medicina/analgesicos/capin-bh-10-mg--10-tabletas.-1381776.html",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 125.93,
+              "promotion": "2 por $99"
+            }
+          ],
+          "searchAliases": [
+            "Capin BH",
+            "Capin BH 10 mg, 10 tabletas"
+          ],
+          "matchLevel": "exact-commercial-product"
+        }
+      ],
+      "ingredientSignature": "butilhioscina:10 mg",
+      "searchProfile": {
+        "brandTerms": [
+          "Capin BH"
+        ],
+        "ingredientTerms": [
+          "Butilhioscina",
+          "Butilhioscina 10 mg"
+        ],
+        "aliases": [
+          "Capin BH",
+          "Butilhioscina",
+          "Hioscina"
+        ],
+        "presentationTerms": [
+          "tableta",
+          "10 tabletas"
+        ],
+        "normalizedText": "capin bh 10 mg 10 tabletas capin bh butilhioscina butilhioscina 10 mg capin bh butilhioscina hioscina"
+      },
+      "alternativePolicy": {
+        "exactAlternativeCriteria": [
+          "same active ingredients",
+          "same strengths",
+          "same dosage form",
+          "same quantity"
+        ],
+        "exactAlternativeLabel": "Mismos principios activos, concentración, forma y cantidad",
+        "relatedPresentationLabel": "Mismos principios activos en otra presentación",
+        "prohibitedClaim": "No afirmar que dos productos son 'lo mismo' ni que son intercambiables.",
+        "safeRecommendationCopy": "También encontramos opciones con los mismos principios activos, concentración y presentación."
+      },
+      "relatedMedicationIds": [],
+      "publicEligible": false,
+      "verificationStatus": "needs-more-offers",
+      "currentOfferCount": 1,
+      "relatedToPublicMedicationIds": [
+        "buscapina-10mg-24-tabletas"
+      ]
+    },
+    {
+      "id": "espadiva-20-400mg-10-tabletas",
+      "slug": "espadiva-20-400mg-10-tabletas",
+      "displayName": "Espadiva 20/400 mg · 10 tabletas",
+      "category": "Cólicos menstruales",
+      "searchTerms": [
+        "Espadiva",
+        "Hioscina",
+        "Butilhioscina",
+        "Ibuprofeno"
+      ],
+      "activeIngredients": [
+        {
+          "name": "Butilhioscina",
+          "strength": "20 mg"
+        },
+        {
+          "name": "Ibuprofeno",
+          "strength": "400 mg"
+        }
+      ],
+      "dosageForm": "tableta",
+      "quantity": 10,
+      "unit": "tabletas",
+      "otc": false,
+      "comparisonType": "catalog-candidate-sale-condition-conflict",
+      "products": [
+        {
+          "id": "espadiva-20-400-10",
+          "brand": "Espadiva",
+          "commercialName": "Espadiva 20/400 mg, 10 tabletas",
+          "offers": [
+            {
+              "pharmacyId": "farmacias-guadalajara",
+              "sourceName": "Espadiva 20mg/400mg, 10 Tabletas.",
+              "sku": "1134639",
+              "price": 104.75,
+              "currency": "MXN",
+              "pricePerUnit": 10.47,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "otc-retail-listing",
+              "url": "https://www.farmaciasguadalajara.com/medicina/analgesicos/espadiva-20mg-400mg--10-tabletas.-1134639.html",
+              "checkedAt": "2026-08-28",
+              "regularPrice": 291.79
+            },
+            {
+              "pharmacyId": "walmart",
+              "sourceName": "Espadiva Hioscina 20 mg / Ibuprofeno 400 mg 10 tabletas",
+              "sku": "00750127709103",
+              "price": 113.0,
+              "currency": "MXN",
+              "pricePerUnit": 11.3,
+              "pricePerUnitLabel": "por tableta",
+              "availability": "listed",
+              "saleCondition": "retailer-labels-prescription-required",
+              "url": "https://www.walmart.com.mx/ip/Espadiva-Hioscina-20-mg-Ibuprofeno-400-mg-10-tabletas/00750127709103",
+              "checkedAt": "2026-08-28"
+            }
+          ],
+          "searchAliases": [
+            "Espadiva",
+            "Espadiva 20/400 mg, 10 tabletas"
+          ],
+          "matchLevel": "exact-commercial-product"
+        }
+      ],
+      "ingredientSignature": "butilhioscina:20 mg|ibuprofeno:400 mg",
+      "searchProfile": {
+        "brandTerms": [
+          "Espadiva"
+        ],
+        "ingredientTerms": [
+          "Butilhioscina",
+          "Butilhioscina 20 mg",
+          "Ibuprofeno",
+          "Ibuprofeno 400 mg"
+        ],
+        "aliases": [
+          "Espadiva",
+          "Hioscina",
+          "Butilhioscina",
+          "Ibuprofeno"
+        ],
+        "presentationTerms": [
+          "tableta",
+          "10 tabletas"
+        ],
+        "normalizedText": "espadiva 20 400 mg 10 tabletas espadiva butilhioscina butilhioscina 20 mg ibuprofeno ibuprofeno 400 mg espadiva hioscina butilhioscina ibuprofeno"
+      },
+      "alternativePolicy": {
+        "exactAlternativeCriteria": [
+          "same active ingredients",
+          "same strengths",
+          "same dosage form",
+          "same quantity"
+        ],
+        "exactAlternativeLabel": "Mismos principios activos, concentración, forma y cantidad",
+        "relatedPresentationLabel": "Mismos principios activos en otra presentación",
+        "prohibitedClaim": "No afirmar que dos productos son 'lo mismo' ni que son intercambiables.",
+        "safeRecommendationCopy": "También encontramos opciones con los mismos principios activos, concentración y presentación."
+      },
+      "relatedMedicationIds": [],
+      "publicEligible": false,
+      "verificationStatus": "sale-condition-conflict",
+      "comparisonWarning": "Farmacias Guadalajara y Walmart no son consistentes sobre la condición de venta; se mantiene fuera del catálogo público hasta resolverla."
     }
-  ]
+  ],
+  "v5ExpansionNotes": {
+    "addedFamilies": [
+      "Buscapina",
+      "Buscapina Fem",
+      "Buscapina Duo",
+      "Hioscina + Ibuprofeno (genéricos y otras marcas)",
+      "Omeprazol 20 mg genérico",
+      "Pepto-Bismol 118 ml",
+      "Graneodín B",
+      "Espavén Enzimático",
+      "Diclofenaco gel genérico 1.16%",
+      "Melox Noche"
+    ],
+    "notableCheapAlternatives": [
+      {
+        "brandMedicationId": "buscapina-fem-20-400mg-10-tabletas",
+        "alternativeMedicationId": "hioscina-ibuprofeno-20-400mg-10-tabletas",
+        "example": "Buscapina Fem desde $145-$185 frente a Hioscina/Ibuprofeno Pharmalife $53 en la consulta del 2026-08-28."
+      },
+      {
+        "brandMedicationId": "losec-a20-20mg-14-capsulas",
+        "alternativeMedicationId": "omeprazol-20mg-14-capsulas",
+        "example": "Losec A-20 frente a omeprazol 20 mg/14 cápsulas desde $27.50-$29 en genéricos."
+      }
+    ],
+    "excludedOutlierExample": "Se excluyó una publicación de Hioscina/Ibuprofeno Medimart a $4 MXN por considerarse un precio anómalo no confiable para comparación.",
+    "saleConditionConflictExample": "Espadiva se mantiene en researchQueue porque Walmart la etiqueta como medicamento que requiere receta, aunque otras fuentes no son consistentes."
+  }
 }
