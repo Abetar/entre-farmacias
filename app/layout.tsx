@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -109,6 +110,7 @@ export const metadata: Metadata = {
         url: "/favicon.ico",
       },
     ],
+
     apple: [
       {
         url: "/apple-touch-icon.png",
@@ -134,7 +136,11 @@ export default function RootLayout({
       lang="es-MX"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        {children}
+
+        <Analytics />
+      </body>
     </html>
   );
 }
