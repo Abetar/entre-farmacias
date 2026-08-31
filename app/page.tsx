@@ -751,7 +751,9 @@ export default function Home() {
   return (
     <main className="site-shell">
       <div className="page-container">
-        {/* HEADER */}
+        {/* =================================================
+            HEADER
+            ================================================= */}
 
         <header className="site-header">
           <button
@@ -764,6 +766,12 @@ export default function Home() {
 
             <span>Entre farmacias</span>
           </button>
+
+          {!selectedMedication && (
+            <span className="header-status">
+              Proyecto independiente
+            </span>
+          )}
         </header>
 
         {/* =================================================
@@ -771,34 +779,34 @@ export default function Home() {
             ================================================= */}
 
         {!selectedMedication && (
-          <>
-            <section className="hero">
-              <div className="hero-badge">
-                Precios de farmacia, sin vueltas
+          <section className="home">
+            <div className="home-main">
+              <div className="home-intro">
+                <p className="home-kicker">
+                  Comparador de precios de medicamentos
+                </p>
+
+                <h1>
+                  ¿Dónde está más barato?
+                </h1>
+
+                <p className="home-description">
+                  Busca una marca o principio activo y compara
+                  los precios que encontramos publicados en
+                  distintas farmacias de México.
+                </p>
               </div>
 
-              <h1>
-                Antes de comprar tu medicamento,
-                <span>
-                  {" "}
-                  revisa cuánto cuesta en otra farmacia.
-                </span>
-              </h1>
+              {/* =================================================
+                  SEARCH
+                  ================================================= */}
 
-              <p className="hero-description">
-                Busca una marca o principio activo. Tenemos{" "}
-                {medications.length} presentaciones con precios
-                publicados en distintas farmacias de México.
-              </p>
-
-              {/* SEARCH */}
-
-              <div className="search-wrapper">
+              <div className="search-wrapper home-search">
                 <label
                   htmlFor="medication-search"
                   className="search-label"
                 >
-                  ¿Cuál estás buscando?
+                  Buscar medicamento
                 </label>
 
                 <div className="search-box">
@@ -850,7 +858,7 @@ export default function Home() {
                   )}
                 </div>
 
-                {/* RESULTS */}
+                {/* SEARCH RESULTS */}
 
                 {query.trim() && (
                   <div
@@ -909,100 +917,97 @@ export default function Home() {
                       )
                     ) : (
                       <div className="no-results">
-                        Todavía no tenemos ese medicamento en
-                        el catálogo.
+                        <strong>
+                          Todavía no tenemos ese medicamento.
+                        </strong>
+
+                        <span>
+                          Estoy agregando nuevas presentaciones
+                          poco a poco.
+                        </span>
                       </div>
                     )}
                   </div>
                 )}
-              </div>
-            </section>
 
-            {/* POPULAR */}
+                {/* SEARCH SUGGESTIONS */}
 
-            {!query.trim() && (
-              <section className="popular-section">
-                <div className="section-heading">
-                  <div>
-                    <p className="eyebrow">
-                      Para empezar
-                    </p>
+                {!query.trim() && (
+                  <div className="quick-search">
+                    <span>Prueba con:</span>
 
-                    <h2>
-                      Algunos que la gente suele buscar
-                    </h2>
-                  </div>
-                </div>
+                    <div className="quick-search-list">
+                      {popularMedications.map((medication) => {
+                        const brand =
+                          getPreferredBrand(medication);
 
-                <div className="popular-grid">
-                  {popularMedications.map((medication) => {
-                    const brand =
-                      getPreferredBrand(medication);
+                        return (
+                          <button
+                            type="button"
+                            key={medication.id}
+                            onClick={() =>
+                              handleSelectMedication(
+                                medication.id,
 
-                    const cheapest =
-                      getCheapestMedicationOffer(
-                        medication,
-                      );
+                                brand ??
+                                  medication.displayName,
 
-                    return (
-                      <button
-                        type="button"
-                        key={medication.id}
-                        className="popular-card"
-                        onClick={() =>
-                          handleSelectMedication(
-                            medication.id,
-
-                            brand ??
-                              medication.displayName,
-
-                            brand ? "brand" : "general",
-                          )
-                        }
-                      >
-                        <div className="popular-icon">
-                          <svg
-                            viewBox="0 0 24 24"
-                            aria-hidden="true"
+                                brand ? "brand" : "general",
+                              )
+                            }
                           >
-                            <path
-                              d="M7.5 4.5h9a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3h-9a3 3 0 0 1-3-3v-9a3 3 0 0 1 3-3Zm4.5 4v7m-3.5-3.5h7"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.8"
-                              strokeLinecap="round"
-                            />
-                          </svg>
-                        </div>
-
-                        <div className="popular-content">
-                          <strong>
                             {brand ??
                               medication.displayName}
-                          </strong>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
 
-                          <span>
-                            {medication.displayName}
-                          </span>
+              {/* =================================================
+                  SMALL PROJECT INFO
+                  ================================================= */}
 
-                          {cheapest && (
-                            <small>
-                              Encontrado desde $
-                              {cheapest.price.toFixed(2)} MXN
-                            </small>
-                          )}
-                        </div>
+              {!query.trim() && (
+                <div className="home-meta">
+                  <div className="home-meta-item">
+                    <strong>{medications.length}</strong>
 
-                        <span className="popular-arrow">
-                          →
-                        </span>
-                      </button>
-                    );
-                  })}
+                    <span>
+                      presentaciones comparables
+                    </span>
+                  </div>
+
+                  <div className="home-meta-item">
+                    <strong>
+                      {medicationsData.pharmacies.length}
+                    </strong>
+
+                    <span>
+                      cadenas consideradas
+                    </span>
+                  </div>
+
+                  <div className="home-meta-item">
+                    <strong>0</strong>
+
+                    <span>
+                      farmacias patrocinando esto
+                    </span>
+                  </div>
                 </div>
-              </section>
-            )}
-          </>
+              )}
+
+              {!query.trim() && (
+                <p className="home-note">
+                  ¿No aparece el que buscas? Probablemente
+                  todavía no lo he agregado.
+                </p>
+              )}
+            </div>
+          </section>
         )}
 
         {/* =================================================
@@ -1019,7 +1024,7 @@ export default function Home() {
                 onClick={handleResetSearch}
               >
                 <span>←</span>
-                Buscar otra cosa
+                Buscar otro medicamento
               </button>
 
               {/* HEADING */}
@@ -1146,11 +1151,11 @@ export default function Home() {
                     <div className="section-heading results-heading">
                       <div>
                         <p className="eyebrow">
-                          Aquí puede estar el ahorro
+                          Encontramos algo interesante
                         </p>
 
                         <h2>
-                          Encontramos otra opción con la misma
+                          Hay una opción más barata con la misma
                           composición
                         </h2>
                       </div>
@@ -1174,7 +1179,7 @@ export default function Home() {
                             </h3>
 
                             <span className="best-small-badge">
-                              Te ahorrarías $
+                              Ahorras $
                               {alternativeSavings.amount.toFixed(
                                 2,
                               )}{" "}
@@ -1249,8 +1254,8 @@ export default function Home() {
                       <p>
                         Coinciden los principios activos,
                         concentración, forma y cantidad. Esto
-                        no significa que estemos recomendando
-                        sustituir un medicamento por otro.
+                        no significa que recomendemos sustituir
+                        un medicamento por otro.
                       </p>
                     </div>
                   </section>
@@ -1264,11 +1269,11 @@ export default function Home() {
                 <div className="section-heading results-heading">
                   <div>
                     <p className="eyebrow">
-                      Precios que encontramos
+                      Precios encontrados
                     </p>
 
                     <h2>
-                      Mira cuánto cambia entre tiendas
+                      De más barato a más caro
                     </h2>
                   </div>
 
@@ -1358,7 +1363,7 @@ export default function Home() {
 
           <span>
             <strong>¿Te ahorró unos pesos?</strong>
-            Me puedes invitar un café
+            Invítame un café
           </span>
         </a>
 
@@ -1431,7 +1436,7 @@ function RelatedMedications({
       <div className="section-heading">
         <div>
           <p className="eyebrow">
-            Si buscas otra presentación
+            Otras presentaciones
           </p>
 
           <h2>
@@ -1543,7 +1548,7 @@ function OfferCard({
 
             {isBest && (
               <span className="best-small-badge">
-                El más barato
+                Más barato
               </span>
             )}
 
@@ -1575,7 +1580,7 @@ function OfferCard({
           {offer.regularPrice &&
             offer.regularPrice > offer.price && (
               <div className="promotion">
-                Precio habitual $
+                Antes $
                 {offer.regularPrice.toFixed(2)} MXN
               </div>
             )}
@@ -1603,8 +1608,8 @@ function OfferCard({
 
         {savingsFromRegularPrice && (
           <small>
-            Hoy cuesta $
-            {savingsFromRegularPrice.toFixed(2)} MXN menos
+            Ahorras $
+            {savingsFromRegularPrice.toFixed(2)} MXN
           </small>
         )}
       </div>
@@ -1956,7 +1961,7 @@ function shortRelationLabel(relation: string) {
     return "Misma composición, otra presentación";
   }
 
-  return "Otra presentación que encontramos";
+  return "Presentación relacionada";
 }
 
 /* =========================================================
