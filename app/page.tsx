@@ -9,11 +9,11 @@ import medicationsData from "@/data/medications.json";
 
 const POPULAR_TERMS = [
   "Febrax",
-  "Saridon",
-  "Lomotil",
+  "Buscapina Fem",
   "Riopan",
-  "Broncolin",
+  "Lomotil",
   "Tylenol",
+  "Saridon",
 ];
 
 const MAX_SEARCH_RESULTS = 12;
@@ -195,9 +195,8 @@ export default function Home() {
 
     for (const medication of medications) {
       const brandTerms =
-        medication.searchProfile?.brandTerms?.map(
-          normalize,
-        ) ?? [];
+        medication.searchProfile?.brandTerms?.map(normalize) ??
+        [];
 
       const ingredientTerms =
         medication.searchProfile?.ingredientTerms?.map(
@@ -205,37 +204,29 @@ export default function Home() {
         ) ?? [];
 
       const aliases =
-        medication.searchProfile?.aliases?.map(
-          normalize,
-        ) ?? [];
+        medication.searchProfile?.aliases?.map(normalize) ?? [];
 
       const searchTerms =
         medication.searchTerms?.map(normalize) ?? [];
 
-      const productAliases =
-        medication.products.flatMap(
-          (product) =>
-            product.searchAliases?.map(normalize) ?? [],
-        );
-
-      const commercialNames =
-        medication.products.map((product) =>
-          normalize(product.commercialName),
-        );
-
-      const productBrands =
-        medication.products.map((product) =>
-          normalize(product.brand),
-        );
-
-      const displayName = normalize(
-        medication.displayName,
+      const productAliases = medication.products.flatMap(
+        (product) =>
+          product.searchAliases?.map(normalize) ?? [],
       );
+
+      const commercialNames = medication.products.map(
+        (product) => normalize(product.commercialName),
+      );
+
+      const productBrands = medication.products.map(
+        (product) => normalize(product.brand),
+      );
+
+      const displayName = normalize(medication.displayName);
 
       let score = 0;
 
-      let matchType: SearchResult["matchType"] =
-        "general";
+      let matchType: SearchResult["matchType"] = "general";
 
       if (
         brandTerms.includes(normalizedQuery) ||
@@ -243,14 +234,10 @@ export default function Home() {
       ) {
         score = 140;
         matchType = "brand";
-      } else if (
-        commercialNames.includes(normalizedQuery)
-      ) {
+      } else if (commercialNames.includes(normalizedQuery)) {
         score = 130;
         matchType = "commercial";
-      } else if (
-        displayName === normalizedQuery
-      ) {
+      } else if (displayName === normalizedQuery) {
         score = 125;
         matchType = "general";
       } else if (
@@ -270,9 +257,7 @@ export default function Home() {
       ) {
         score = 110;
         matchType = "commercial";
-      } else if (
-        ingredientTerms.includes(normalizedQuery)
-      ) {
+      } else if (ingredientTerms.includes(normalizedQuery)) {
         score = 105;
         matchType = "ingredient";
       } else if (
@@ -326,9 +311,7 @@ export default function Home() {
       ) {
         score = 75;
         matchType = "alias";
-      } else if (
-        displayName.includes(normalizedQuery)
-      ) {
+      } else if (displayName.includes(normalizedQuery)) {
         score = 70;
         matchType = "general";
       }
@@ -391,8 +374,7 @@ export default function Home() {
       )
       .map((relation) => {
         const medication = medications.find(
-          (item) =>
-            item.id === relation.medicationId,
+          (item) => item.id === relation.medicationId,
         );
 
         if (!medication) {
@@ -433,8 +415,7 @@ export default function Home() {
       )
       .map((relation) => {
         const medication = medications.find(
-          (item) =>
-            item.id === relation.medicationId,
+          (item) => item.id === relation.medicationId,
         );
 
         if (!medication) {
@@ -495,19 +476,16 @@ export default function Home() {
 
             productId: product.id,
 
-            productName:
-              product.commercialName,
+            productName: product.commercialName,
 
             brand: product.brand,
 
-            medicationId:
-              source.medication.id,
+            medicationId: source.medication.id,
 
             medicationName:
               source.medication.displayName,
 
-            relationToSelected:
-              source.relation,
+            relationToSelected: source.relation,
 
             recommendationLabel:
               product.recommendationLabel,
@@ -521,17 +499,15 @@ export default function Home() {
       }
     }
 
-    const deduplicatedOffers =
-      deduplicateOffers(offers);
+    const deduplicatedOffers = deduplicateOffers(offers);
 
     if (!deduplicatedOffers.length) {
       return null;
     }
 
-    const sortedOffers =
-      [...deduplicatedOffers].sort(
-        (a, b) => a.price - b.price,
-      );
+    const sortedOffers = [...deduplicatedOffers].sort(
+      (a, b) => a.price - b.price,
+    );
 
     return {
       offers: sortedOffers,
@@ -552,12 +528,10 @@ export default function Home() {
       return null;
     }
 
-    const brandOffers =
-      comparison.offers.filter(
-        (offer) =>
-          normalize(offer.brand) ===
-          normalize(searchedBrand),
-      );
+    const brandOffers = comparison.offers.filter(
+      (offer) =>
+        normalize(offer.brand) === normalize(searchedBrand),
+    );
 
     if (!brandOffers.length) {
       return null;
@@ -581,14 +555,11 @@ export default function Home() {
       return null;
     }
 
-    const alternatives =
-      comparison.offers.filter(
-        (offer) =>
-          normalize(offer.brand) !==
-            normalize(searchedBrand) &&
-          offer.price <
-            searchedBrandBestPrice.price,
-      );
+    const alternatives = comparison.offers.filter(
+      (offer) =>
+        normalize(offer.brand) !== normalize(searchedBrand) &&
+        offer.price < searchedBrandBestPrice.price,
+    );
 
     if (!alternatives.length) {
       return null;
@@ -625,11 +596,8 @@ export default function Home() {
 
     return {
       amount,
-
       percent:
-        (amount /
-          searchedBrandBestPrice.price) *
-        100,
+        (amount / searchedBrandBestPrice.price) * 100,
     };
   }, [
     cheaperAlternative,
@@ -671,43 +639,35 @@ export default function Home() {
 
   const popularMedications = useMemo(() => {
     const found = POPULAR_TERMS.map((term) => {
-      const normalizedTerm =
-        normalize(term);
+      const normalizedTerm = normalize(term);
 
-      return medications.find(
-        (medication) => {
-          const brands =
-            medication.searchProfile?.brandTerms?.map(
-              normalize,
-            ) ?? [];
+      return medications.find((medication) => {
+        const brands =
+          medication.searchProfile?.brandTerms?.map(
+            normalize,
+          ) ?? [];
 
-          const aliases =
-            medication.searchProfile?.aliases?.map(
-              normalize,
-            ) ?? [];
+        const aliases =
+          medication.searchProfile?.aliases?.map(normalize) ??
+          [];
 
-          const searchTerms =
-            medication.searchTerms?.map(
-              normalize,
-            ) ?? [];
+        const searchTerms =
+          medication.searchTerms?.map(normalize) ?? [];
 
-          const productBrands =
-            medication.products.map(
-              (product) =>
-                normalize(product.brand),
-            );
+        const productBrands = medication.products.map(
+          (product) => normalize(product.brand),
+        );
 
-          return (
-            brands.includes(normalizedTerm) ||
-            aliases.includes(normalizedTerm) ||
-            searchTerms.includes(normalizedTerm) ||
-            productBrands.includes(normalizedTerm) ||
-            normalize(
-              medication.displayName,
-            ).includes(normalizedTerm)
-          );
-        },
-      );
+        return (
+          brands.includes(normalizedTerm) ||
+          aliases.includes(normalizedTerm) ||
+          searchTerms.includes(normalizedTerm) ||
+          productBrands.includes(normalizedTerm) ||
+          normalize(medication.displayName).includes(
+            normalizedTerm,
+          )
+        );
+      });
     });
 
     return found.filter(
@@ -718,8 +678,7 @@ export default function Home() {
       ): medication is Medication =>
         Boolean(medication) &&
         array.findIndex(
-          (item) =>
-            item?.id === medication?.id,
+          (item) => item?.id === medication?.id,
         ) === index,
     );
   }, []);
@@ -733,46 +692,32 @@ export default function Home() {
     selectedQuery?: string,
     matchType?: SearchResult["matchType"],
   ) {
-    const medication =
-      medications.find(
-        (item) =>
-          item.id === medicationId,
-      );
+    const medication = medications.find(
+      (item) => item.id === medicationId,
+    );
 
     if (!medication) {
       return;
     }
 
-    if (
-      selectedQuery &&
-      matchType === "brand"
-    ) {
-      const brand =
-        findMatchingBrand(
-          medication,
-          selectedQuery,
-        );
+    if (selectedQuery && matchType === "brand") {
+      const brand = findMatchingBrand(
+        medication,
+        selectedQuery,
+      );
 
       setSearchedBrand(brand);
     } else {
       const brand = selectedQuery
-        ? findExactBrand(
-            medication,
-            selectedQuery,
-          )
+        ? findExactBrand(medication, selectedQuery)
         : null;
 
       setSearchedBrand(brand);
     }
 
-    setSelectedMedicationId(
-      medicationId,
-    );
+    setSelectedMedicationId(medicationId);
 
-    setQuery(
-      selectedQuery ??
-        medication.displayName,
-    );
+    setQuery(selectedQuery ?? medication.displayName);
 
     window.scrollTo({
       top: 0,
@@ -791,13 +736,10 @@ export default function Home() {
     });
   }
 
-  function getPharmacyName(
-    pharmacyId: string,
-  ) {
+  function getPharmacyName(pharmacyId: string) {
     return (
       medicationsData.pharmacies.find(
-        (pharmacy) =>
-          pharmacy.id === pharmacyId,
+        (pharmacy) => pharmacy.id === pharmacyId,
       )?.name ?? pharmacyId
     );
   }
@@ -818,13 +760,9 @@ export default function Home() {
             onClick={handleResetSearch}
             aria-label="Volver al inicio de Entre farmacias"
           >
-            <span className="brand-mark">
-              EF
-            </span>
+            <span className="brand-mark">EF</span>
 
-            <span>
-              Entre farmacias
-            </span>
+            <span>Entre farmacias</span>
           </button>
         </header>
 
@@ -836,22 +774,21 @@ export default function Home() {
           <>
             <section className="hero">
               <div className="hero-badge">
-                Compara antes de comprar
+                Precios de farmacia, sin vueltas
               </div>
 
               <h1>
-                Encuentra tu medicamento
+                Antes de comprar tu medicamento,
                 <span>
                   {" "}
-                  al mejor precio encontrado.
+                  revisa cuánto cuesta en otra farmacia.
                 </span>
               </h1>
 
               <p className="hero-description">
-                Busca entre{" "}
-                {medications.length}{" "}
-                presentaciones por marca o
-                principio activo.
+                Busca una marca o principio activo. Tenemos{" "}
+                {medications.length} presentaciones con precios
+                publicados en distintas farmacias de México.
               </p>
 
               {/* SEARCH */}
@@ -861,7 +798,7 @@ export default function Home() {
                   htmlFor="medication-search"
                   className="search-label"
                 >
-                  ¿Qué medicamento buscas?
+                  ¿Cuál estás buscando?
                 </label>
 
                 <div className="search-box">
@@ -884,19 +821,13 @@ export default function Home() {
                     type="search"
                     value={query}
                     onChange={(event) => {
-                      setQuery(
-                        event.target.value,
-                      );
+                      setQuery(event.target.value);
 
-                      setSelectedMedicationId(
-                        null,
-                      );
+                      setSelectedMedicationId(null);
 
-                      setSearchedBrand(
-                        null,
-                      );
+                      setSearchedBrand(null);
                     }}
-                    placeholder="Ej. Febrax, Saridon, Riopan..."
+                    placeholder="Febrax, Buscapina, paracetamol..."
                     autoComplete="off"
                     spellCheck={false}
                   />
@@ -908,13 +839,9 @@ export default function Home() {
                       onClick={() => {
                         setQuery("");
 
-                        setSelectedMedicationId(
-                          null,
-                        );
+                        setSelectedMedicationId(null);
 
-                        setSearchedBrand(
-                          null,
-                        );
+                        setSearchedBrand(null);
                       }}
                       aria-label="Limpiar búsqueda"
                     >
@@ -931,16 +858,14 @@ export default function Home() {
                     role="listbox"
                     aria-label="Resultados de búsqueda"
                   >
-                    {searchResults.length >
-                    0 ? (
+                    {searchResults.length > 0 ? (
                       searchResults.map(
                         ({
                           medication,
                           matchType,
                         }) => {
                           const matchingBrand =
-                            matchType ===
-                            "brand"
+                            matchType === "brand"
                               ? findMatchingBrand(
                                   medication,
                                   query,
@@ -950,9 +875,7 @@ export default function Home() {
                           return (
                             <button
                               type="button"
-                              key={
-                                medication.id
-                              }
+                              key={medication.id}
                               className="search-result"
                               role="option"
                               aria-selected="false"
@@ -969,15 +892,11 @@ export default function Home() {
                             >
                               <div>
                                 <strong>
-                                  {
-                                    medication.displayName
-                                  }
+                                  {medication.displayName}
                                 </strong>
 
                                 <span>
-                                  {getMatchLabel(
-                                    matchType,
-                                  )}
+                                  {getMatchLabel(matchType)}
                                 </span>
                               </div>
 
@@ -990,8 +909,8 @@ export default function Home() {
                       )
                     ) : (
                       <div className="no-results">
-                        No encontramos ese
-                        medicamento.
+                        Todavía no tenemos ese medicamento en
+                        el catálogo.
                       </div>
                     )}
                   </div>
@@ -1006,101 +925,80 @@ export default function Home() {
                 <div className="section-heading">
                   <div>
                     <p className="eyebrow">
-                      Búsquedas populares
+                      Para empezar
                     </p>
 
                     <h2>
-                      Prueba una marca
+                      Algunos que la gente suele buscar
                     </h2>
                   </div>
                 </div>
 
                 <div className="popular-grid">
-                  {popularMedications.map(
-                    (medication) => {
-                      const brand =
-                        getPreferredBrand(
-                          medication,
-                        );
+                  {popularMedications.map((medication) => {
+                    const brand =
+                      getPreferredBrand(medication);
 
-                      const cheapest =
-                        getCheapestMedicationOffer(
-                          medication,
-                        );
-
-                      return (
-                        <button
-                          type="button"
-                          key={
-                            medication.id
-                          }
-                          className="popular-card"
-                          onClick={() =>
-                            handleSelectMedication(
-                              medication.id,
-
-                              brand ??
-                                medication.displayName,
-
-                              brand
-                                ? "brand"
-                                : "general",
-                            )
-                          }
-                        >
-                          <div className="popular-icon">
-                            <svg
-                              viewBox="0 0 24 24"
-                              aria-hidden="true"
-                            >
-                              <path
-                                d="M7.5 4.5h9a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3h-9a3 3 0 0 1-3-3v-9a3 3 0 0 1 3-3Zm4.5 4v7m-3.5-3.5h7"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="1.8"
-                                strokeLinecap="round"
-                              />
-                            </svg>
-                          </div>
-
-                          <div className="popular-content">
-                            <strong>
-                              {brand ??
-                                medication.displayName}
-                            </strong>
-
-                            <span>
-                              {
-                                medication.displayName
-                              }
-                            </span>
-
-                            {cheapest && (
-                              <>
-                                <small>
-                                  Desde $
-                                  {cheapest.price.toFixed(
-                                    2,
-                                  )}{" "}
-                                  MXN
-                                </small>
-
-                                <UsdReference
-                                  amountMxn={
-                                    cheapest.price
-                                  }
-                                />
-                              </>
-                            )}
-                          </div>
-
-                          <span className="popular-arrow">
-                            →
-                          </span>
-                        </button>
+                    const cheapest =
+                      getCheapestMedicationOffer(
+                        medication,
                       );
-                    },
-                  )}
+
+                    return (
+                      <button
+                        type="button"
+                        key={medication.id}
+                        className="popular-card"
+                        onClick={() =>
+                          handleSelectMedication(
+                            medication.id,
+
+                            brand ??
+                              medication.displayName,
+
+                            brand ? "brand" : "general",
+                          )
+                        }
+                      >
+                        <div className="popular-icon">
+                          <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                          >
+                            <path
+                              d="M7.5 4.5h9a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3h-9a3 3 0 0 1-3-3v-9a3 3 0 0 1 3-3Zm4.5 4v7m-3.5-3.5h7"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.8"
+                              strokeLinecap="round"
+                            />
+                          </svg>
+                        </div>
+
+                        <div className="popular-content">
+                          <strong>
+                            {brand ??
+                              medication.displayName}
+                          </strong>
+
+                          <span>
+                            {medication.displayName}
+                          </span>
+
+                          {cheapest && (
+                            <small>
+                              Encontrado desde $
+                              {cheapest.price.toFixed(2)} MXN
+                            </small>
+                          )}
+                        </div>
+
+                        <span className="popular-arrow">
+                          →
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </section>
             )}
@@ -1118,32 +1016,24 @@ export default function Home() {
               <button
                 type="button"
                 className="back-button"
-                onClick={
-                  handleResetSearch
-                }
+                onClick={handleResetSearch}
               >
                 <span>←</span>
-                Buscar otro medicamento
+                Buscar otra cosa
               </button>
 
               {/* HEADING */}
 
               <div className="medication-heading">
                 <p className="eyebrow">
-                  {
-                    selectedMedication.category
-                  }
+                  {selectedMedication.category}
                 </p>
 
                 <h1>
-                  {
-                    selectedMedication.displayName
-                  }
+                  {selectedMedication.displayName}
                 </h1>
 
-                <p>
-                  {selectedIngredients}
-                </p>
+                <p>{selectedIngredients}</p>
               </div>
 
               {/* WARNING */}
@@ -1153,9 +1043,7 @@ export default function Home() {
                   <InfoIcon />
 
                   <p>
-                    {
-                      selectedMedication.comparisonWarning
-                    }
+                    {selectedMedication.comparisonWarning}
                   </p>
                 </div>
               )}
@@ -1168,8 +1056,8 @@ export default function Home() {
                 <div className="best-option-copy">
                   <div className="best-badge">
                     {searchedBrand
-                      ? `Mejor precio de ${searchedBrand}`
-                      : "Mejor precio encontrado"}
+                      ? `Lo más barato que encontramos de ${searchedBrand}`
+                      : "Lo más barato que encontramos"}
                   </div>
 
                   <p className="best-label">
@@ -1181,9 +1069,7 @@ export default function Home() {
                   <div className="best-price">
                     <span>$</span>
 
-                    {primaryOffer.price.toFixed(
-                      2,
-                    )}
+                    {primaryOffer.price.toFixed(2)}
 
                     <small
                       style={{
@@ -1199,21 +1085,17 @@ export default function Home() {
                   </div>
 
                   <UsdReference
-                    amountMxn={
-                      primaryOffer.price
-                    }
+                    amountMxn={primaryOffer.price}
                     prominent
                   />
 
                   <p className="best-product">
-                    {
-                      primaryOffer.productName
-                    }
+                    {primaryOffer.productName}
                   </p>
 
                   {searchedBrand && (
                     <div className="promotion">
-                      Marca que buscaste
+                      Esta es la marca que buscaste
                     </div>
                   )}
 
@@ -1223,22 +1105,17 @@ export default function Home() {
                     rel="noopener noreferrer"
                     className="primary-button"
                   >
-                    Ver producto
+                    Ir a la farmacia
                     <span>↗</span>
                   </a>
                 </div>
 
                 <div className="best-option-side">
                   <div className="unit-price-card">
-                    <span>
-                      Precio por unidad
-                    </span>
+                    <span>Por unidad</span>
 
                     <strong>
-                      {formatPricePerUnit(
-                        primaryOffer,
-                      )}{" "}
-                      MXN
+                      {formatPricePerUnit(primaryOffer)} MXN
                     </strong>
 
                     <small>
@@ -1250,14 +1127,10 @@ export default function Home() {
                   </div>
 
                   <div className="updated-card">
-                    <span>
-                      Consultado
-                    </span>
+                    <span>Precio revisado</span>
 
                     <strong>
-                      {formatDate(
-                        primaryOffer.checkedAt,
-                      )}
+                      {formatDate(primaryOffer.checkedAt)}
                     </strong>
                   </div>
                 </div>
@@ -1273,19 +1146,17 @@ export default function Home() {
                     <div className="section-heading results-heading">
                       <div>
                         <p className="eyebrow">
-                          Opción para ahorrar
+                          Aquí puede estar el ahorro
                         </p>
 
                         <h2>
-                          Misma composición y
-                          presentación
+                          Encontramos otra opción con la misma
+                          composición
                         </h2>
                       </div>
 
                       <span>
-                        {alternativeSavings.percent.toFixed(
-                          0,
-                        )}
+                        {alternativeSavings.percent.toFixed(0)}
                         % menos
                       </span>
                     </div>
@@ -1299,13 +1170,11 @@ export default function Home() {
                         <div className="offer-info">
                           <div className="offer-title-row">
                             <h3>
-                              {
-                                cheaperAlternative.brand
-                              }
+                              {cheaperAlternative.brand}
                             </h3>
 
                             <span className="best-small-badge">
-                              Ahorras $
+                              Te ahorrarías $
                               {alternativeSavings.amount.toFixed(
                                 2,
                               )}{" "}
@@ -1314,9 +1183,7 @@ export default function Home() {
                           </div>
 
                           <p>
-                            {
-                              cheaperAlternative.productName
-                            }
+                            {cheaperAlternative.productName}
                           </p>
 
                           <span className="offer-brand">
@@ -1326,10 +1193,8 @@ export default function Home() {
                           </span>
 
                           <div className="promotion">
-                            Mismos principios
-                            activos,
-                            concentración y
-                            presentación
+                            Mismos principios activos,
+                            concentración, forma y cantidad
                           </div>
                         </div>
                       </div>
@@ -1337,9 +1202,7 @@ export default function Home() {
                       <div className="offer-price-area">
                         <strong>
                           $
-                          {cheaperAlternative.price.toFixed(
-                            2,
-                          )}{" "}
+                          {cheaperAlternative.price.toFixed(2)}{" "}
                           MXN
                         </strong>
 
@@ -1365,19 +1228,17 @@ export default function Home() {
                           {alternativeSavings.amount.toFixed(
                             2,
                           )}{" "}
-                          MXN menos
+                          MXN menos que la marca
                         </small>
                       </div>
 
                       <a
-                        href={
-                          cheaperAlternative.url
-                        }
+                        href={cheaperAlternative.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="offer-link"
                       >
-                        Ver opción
+                        Ver esta opción
                         <span>↗</span>
                       </a>
                     </article>
@@ -1386,9 +1247,10 @@ export default function Home() {
                       <InfoIcon />
 
                       <p>
-                        Misma composición y
-                        presentación. No implica
-                        sustitución médica.
+                        Coinciden los principios activos,
+                        concentración, forma y cantidad. Esto
+                        no significa que estemos recomendando
+                        sustituir un medicamento por otro.
                       </p>
                     </div>
                   </section>
@@ -1402,38 +1264,31 @@ export default function Home() {
                 <div className="section-heading results-heading">
                   <div>
                     <p className="eyebrow">
-                      Todos los precios
+                      Precios que encontramos
                     </p>
 
                     <h2>
-                      Compara opciones
+                      Mira cuánto cambia entre tiendas
                     </h2>
                   </div>
 
                   <span>
-                    {
-                      comparison.offers.length
-                    }{" "}
-                    {comparison.offers.length ===
-                    1
-                      ? "opción"
-                      : "opciones"}
+                    {comparison.offers.length}{" "}
+                    {comparison.offers.length === 1
+                      ? "precio"
+                      : "precios"}
                   </span>
                 </div>
 
                 <div className="offers-list">
                   {comparison.offers.map(
-                    (
-                      offer,
-                      index,
-                    ) => (
+                    (offer, index) => (
                       <OfferCard
                         key={`${offer.productId}-${offer.pharmacyId}-${offer.sku}-${offer.medicationId}`}
                         offer={offer}
                         index={index}
                         cheapestPrice={
-                          comparison.cheapest
-                            .price
+                          comparison.cheapest.price
                         }
                         medication={
                           selectedMedication
@@ -1454,15 +1309,10 @@ export default function Home() {
                   OTHER PRESENTATIONS
                   ================================================= */}
 
-              {otherRelatedMedications.length >
-                0 && (
+              {otherRelatedMedications.length > 0 && (
                 <RelatedMedications
-                  items={
-                    otherRelatedMedications
-                  }
-                  onSelect={
-                    handleSelectMedication
-                  }
+                  items={otherRelatedMedications}
+                  onSelect={handleSelectMedication}
                 />
               )}
             </section>
@@ -1507,10 +1357,8 @@ export default function Home() {
           </svg>
 
           <span>
-            <strong>
-              ¿Te sirvió?
-            </strong>
-            Invítame un café
+            <strong>¿Te ahorró unos pesos?</strong>
+            Me puedes invitar un café
           </span>
         </a>
 
@@ -1521,28 +1369,26 @@ export default function Home() {
         <footer className="footer">
           <div className="footer-info">
             <p>
-              Entre farmacias compara
-              precios publicados en línea.
-              Los precios y disponibilidad
-              pueden variar.
+              Los precios son los que encontramos publicados
+              en línea. Pueden cambiar según ciudad, tienda,
+              promociones o disponibilidad.
             </p>
 
             <span>
-              Compara precios, no
-              tratamientos.
+              Esto compara precios y composición, no reemplaza
+              una recomendación médica.
             </span>
 
             <span>
-              Precios en MXN. Conversión a
-              USD aproximada y sólo como
-              referencia.
+              Precios en MXN. El equivalente en dólares es
+              aproximado.
             </span>
           </div>
 
           <div className="footer-signature">
             <span>
-              Hecho con café, código y
-              muchas pestañas abiertas por
+              Proyecto independiente hecho entre café, código
+              y demasiadas pestañas abiertas por
             </span>
 
             <a
@@ -1585,11 +1431,11 @@ function RelatedMedications({
       <div className="section-heading">
         <div>
           <p className="eyebrow">
-            Otras presentaciones
+            Si buscas otra presentación
           </p>
 
           <h2>
-            También puedes comparar
+            También encontramos estas
           </h2>
         </div>
       </div>
@@ -1615,33 +1461,17 @@ function RelatedMedications({
             >
               <div className="popular-content">
                 <strong>
-                  {
-                    medication.displayName
-                  }
+                  {medication.displayName}
                 </strong>
 
                 <span>
-                  {shortRelationLabel(
-                    relation.relation,
-                  )}
+                  {shortRelationLabel(relation.relation)}
                 </span>
 
                 {cheapest && (
-                  <>
-                    <small>
-                      Desde $
-                      {cheapest.price.toFixed(
-                        2,
-                      )}{" "}
-                      MXN
-                    </small>
-
-                    <UsdReference
-                      amountMxn={
-                        cheapest.price
-                      }
-                    />
-                  </>
+                  <small>
+                    Desde ${cheapest.price.toFixed(2)} MXN
+                  </small>
                 )}
               </div>
 
@@ -1679,8 +1509,7 @@ function OfferCard({
     pharmacyId: string,
   ) => string;
 }) {
-  const difference =
-    offer.price - cheapestPrice;
+  const difference = offer.price - cheapestPrice;
 
   const isBest = index === 0;
 
@@ -1692,61 +1521,50 @@ function OfferCard({
   const savingsFromRegularPrice =
     offer.regularPrice &&
     offer.regularPrice > offer.price
-      ? offer.regularPrice -
-        offer.price
+      ? offer.regularPrice - offer.price
       : null;
 
   return (
     <article
       className={`offer-card ${
-        isBest
-          ? "offer-card-best"
-          : ""
+        isBest ? "offer-card-best" : ""
       }`}
     >
       <div className="offer-main">
         <div className="offer-position">
-          {isBest
-            ? "✓"
-            : index + 1}
+          {isBest ? "✓" : index + 1}
         </div>
 
         <div className="offer-info">
           <div className="offer-title-row">
             <h3>
-              {getPharmacyName(
-                offer.pharmacyId,
-              )}
+              {getPharmacyName(offer.pharmacyId)}
             </h3>
 
             {isBest && (
               <span className="best-small-badge">
-                Mejor precio
+                El más barato
               </span>
             )}
 
-            {isSearchedBrand &&
-              !isBest && (
-                <span className="best-small-badge">
-                  Marca buscada
-                </span>
-              )}
+            {isSearchedBrand && !isBest && (
+              <span className="best-small-badge">
+                Tu marca
+              </span>
+            )}
           </div>
 
-          <p>
-            {offer.productName}
-          </p>
+          <p>{offer.productName}</p>
 
           <span className="offer-brand">
-            Marca: {offer.brand}
+            {offer.brand}
           </span>
 
-          {searchedBrand &&
-            !isSearchedBrand && (
-              <div className="promotion">
-                Misma composición
-              </div>
-            )}
+          {searchedBrand && !isSearchedBrand && (
+            <div className="promotion">
+              Misma composición y presentación
+            </div>
+          )}
 
           {offer.promotion && (
             <div className="promotion">
@@ -1755,14 +1573,10 @@ function OfferCard({
           )}
 
           {offer.regularPrice &&
-            offer.regularPrice >
-              offer.price && (
+            offer.regularPrice > offer.price && (
               <div className="promotion">
-                Antes $
-                {offer.regularPrice.toFixed(
-                  2,
-                )}{" "}
-                MXN
+                Precio habitual $
+                {offer.regularPrice.toFixed(2)} MXN
               </div>
             )}
         </div>
@@ -1773,41 +1587,24 @@ function OfferCard({
           ${offer.price.toFixed(2)} MXN
         </strong>
 
-        <UsdReference
-          amountMxn={
-            offer.price
-          }
-        />
+        <UsdReference amountMxn={offer.price} />
 
         <span>
-          {formatPricePerUnit(
-            offer,
-          )}{" "}
-          MXN{" "}
+          {formatPricePerUnit(offer)} MXN{" "}
           {offer.pricePerUnitLabel ??
-            getDefaultUnitLabel(
-              medication,
-            )}
+            getDefaultUnitLabel(medication)}
         </span>
 
-        {!isBest &&
-          difference > 0 && (
-            <small>
-              $
-              {difference.toFixed(
-                2,
-              )}{" "}
-              MXN más
-            </small>
-          )}
+        {!isBest && difference > 0 && (
+          <small>
+            +${difference.toFixed(2)} MXN
+          </small>
+        )}
 
         {savingsFromRegularPrice && (
           <small>
-            Ahorras $
-            {savingsFromRegularPrice.toFixed(
-              2,
-            )}{" "}
-            MXN
+            Hoy cuesta $
+            {savingsFromRegularPrice.toFixed(2)} MXN menos
           </small>
         )}
       </div>
@@ -1818,7 +1615,7 @@ function OfferCard({
         rel="noopener noreferrer"
         className="offer-link"
       >
-        Ver producto
+        Ver en tienda
         <span>↗</span>
       </a>
     </article>
@@ -1840,21 +1637,15 @@ function UsdReference({
     <small
       style={{
         display: "block",
-        marginTop: prominent
-          ? "4px"
-          : "2px",
-        marginBottom: prominent
-          ? "10px"
-          : "0",
-        fontSize: prominent
-          ? "12px"
-          : "10px",
+        marginTop: prominent ? "4px" : "2px",
+        marginBottom: prominent ? "10px" : "0",
+        fontSize: prominent ? "12px" : "10px",
         lineHeight: 1.3,
         fontWeight: 500,
-        opacity: 0.62,
+        opacity: 0.52,
       }}
     >
-      ≈ {formatUsdFromMxn(amountMxn)}
+      aprox. {formatUsdFromMxn(amountMxn)}
     </small>
   );
 }
@@ -1893,32 +1684,18 @@ function InfoIcon() {
    HELPERS
    ========================================================= */
 
-function normalize(
-  value: string,
-) {
+function normalize(value: string) {
   return value
     .normalize("NFD")
-    .replace(
-      /[\u0300-\u036f]/g,
-      "",
-    )
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
-    .replace(
-      /[^a-z0-9]+/g,
-      " ",
-    )
+    .replace(/[^a-z0-9]+/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
 
-function uniqueStrings(
-  values: string[],
-) {
-  return Array.from(
-    new Set(
-      values.filter(Boolean),
-    ),
-  );
+function uniqueStrings(values: string[]) {
+  return Array.from(new Set(values.filter(Boolean)));
 }
 
 /* =========================================================
@@ -1928,30 +1705,24 @@ function uniqueStrings(
 function getPreferredBrand(
   medication: Medication,
 ) {
-  const productBrands =
-    medication.products.map(
-      (product) => product.brand,
-    );
+  const productBrands = medication.products.map(
+    (product) => product.brand,
+  );
 
-  const searchTerms =
-    medication.searchTerms ?? [];
+  const searchTerms = medication.searchTerms ?? [];
 
-  const brandFromSearch =
-    productBrands.find((brand) =>
-      searchTerms.some(
-        (term) =>
-          normalize(term) ===
-          normalize(brand),
-      ),
-    );
+  const brandFromSearch = productBrands.find((brand) =>
+    searchTerms.some(
+      (term) => normalize(term) === normalize(brand),
+    ),
+  );
 
   if (brandFromSearch) {
     return brandFromSearch;
   }
 
   return (
-    medication.searchProfile
-      ?.brandTerms?.[0] ??
+    medication.searchProfile?.brandTerms?.[0] ??
     productBrands[0] ??
     null
   );
@@ -1961,12 +1732,10 @@ function findExactBrand(
   medication: Medication,
   query: string,
 ) {
-  const normalizedQuery =
-    normalize(query);
+  const normalizedQuery = normalize(query);
 
   const brands = uniqueStrings([
-    ...(medication.searchProfile
-      ?.brandTerms ?? []),
+    ...(medication.searchProfile?.brandTerms ?? []),
 
     ...medication.products.map(
       (product) => product.brand,
@@ -1976,8 +1745,7 @@ function findExactBrand(
   return (
     brands.find(
       (brand) =>
-        normalize(brand) ===
-        normalizedQuery,
+        normalize(brand) === normalizedQuery,
     ) ?? null
   );
 }
@@ -1986,12 +1754,10 @@ function findMatchingBrand(
   medication: Medication,
   searchQuery: string,
 ) {
-  const normalizedSearch =
-    normalize(searchQuery);
+  const normalizedSearch = normalize(searchQuery);
 
   const brands = uniqueStrings([
-    ...(medication.searchProfile
-      ?.brandTerms ?? []),
+    ...(medication.searchProfile?.brandTerms ?? []),
 
     ...medication.products.map(
       (product) => product.brand,
@@ -1999,32 +1765,24 @@ function findMatchingBrand(
   ]);
 
   const exact = brands.find(
-    (brand) =>
-      normalize(brand) ===
-      normalizedSearch,
+    (brand) => normalize(brand) === normalizedSearch,
   );
 
   if (exact) {
     return exact;
   }
 
-  const startsWith =
-    brands.find((brand) =>
-      normalize(brand).startsWith(
-        normalizedSearch,
-      ),
-    );
+  const startsWith = brands.find((brand) =>
+    normalize(brand).startsWith(normalizedSearch),
+  );
 
   if (startsWith) {
     return startsWith;
   }
 
-  const includes =
-    brands.find((brand) =>
-      normalize(brand).includes(
-        normalizedSearch,
-      ),
-    );
+  const includes = brands.find((brand) =>
+    normalize(brand).includes(normalizedSearch),
+  );
 
   return includes ?? null;
 }
@@ -2037,37 +1795,27 @@ function getCheapestMedicationOffer(
   medication: Medication,
 ): EnrichedOffer | null {
   const offers: EnrichedOffer[] =
-    medication.products.flatMap(
-      (product) =>
-        product.offers.map(
-          (offer) => ({
-            ...offer,
+    medication.products.flatMap((product) =>
+      product.offers.map((offer) => ({
+        ...offer,
 
-            productId:
-              product.id,
+        productId: product.id,
 
-            productName:
-              product.commercialName,
+        productName: product.commercialName,
 
-            brand:
-              product.brand,
+        brand: product.brand,
 
-            medicationId:
-              medication.id,
+        medicationId: medication.id,
 
-            medicationName:
-              medication.displayName,
+        medicationName: medication.displayName,
 
-            relationToSelected:
-              "selected",
+        relationToSelected: "selected",
 
-            recommendationLabel:
-              product.recommendationLabel,
+        recommendationLabel:
+          product.recommendationLabel,
 
-            isSearchedBrand:
-              false,
-          }),
-        ),
+        isSearchedBrand: false,
+      })),
     );
 
   if (!offers.length) {
@@ -2075,52 +1823,35 @@ function getCheapestMedicationOffer(
   }
 
   return [...offers].sort(
-    (a, b) =>
-      a.price - b.price,
+    (a, b) => a.price - b.price,
   )[0];
 }
 
 function deduplicateOffers(
   offers: EnrichedOffer[],
 ) {
-  const seen =
-    new Map<
-      string,
-      EnrichedOffer
-    >();
+  const seen = new Map<string, EnrichedOffer>();
 
   for (const offer of offers) {
     const key = [
-      normalize(
-        offer.pharmacyId,
-      ),
-      normalize(
-        offer.sku ?? "",
-      ),
-      normalize(
-        offer.url ?? "",
-      ),
+      normalize(offer.pharmacyId),
+      normalize(offer.sku ?? ""),
+      normalize(offer.url ?? ""),
     ].join("|");
 
-    const existing =
-      seen.get(key);
+    const existing = seen.get(key);
 
     if (!existing) {
       seen.set(key, offer);
       continue;
     }
 
-    if (
-      offer.price <
-      existing.price
-    ) {
+    if (offer.price < existing.price) {
       seen.set(key, offer);
     }
   }
 
-  return Array.from(
-    seen.values(),
-  );
+  return Array.from(seen.values());
 }
 
 /* =========================================================
@@ -2130,42 +1861,29 @@ function deduplicateOffers(
 function getDefaultUnitLabel(
   medication: Medication,
 ) {
-  const unit =
-    normalize(medication.unit);
+  const unit = normalize(medication.unit);
 
-  if (
-    unit.includes("tableta")
-  ) {
+  if (unit.includes("tableta")) {
     return "por tableta";
   }
 
-  if (
-    unit.includes("capsula")
-  ) {
+  if (unit.includes("capsula")) {
     return "por cápsula";
   }
 
-  if (
-    unit.includes("comprimido")
-  ) {
+  if (unit.includes("comprimido")) {
     return "por comprimido";
   }
 
-  if (
-    unit.includes("sobre")
-  ) {
+  if (unit.includes("sobre")) {
     return "por sobre";
   }
 
-  if (
-    unit.includes("supositorio")
-  ) {
+  if (unit.includes("supositorio")) {
     return "por supositorio";
   }
 
-  if (
-    unit.includes("enema")
-  ) {
+  if (unit.includes("enema")) {
     return "por enema";
   }
 
@@ -2181,31 +1899,20 @@ function getDefaultUnitLabel(
 }
 
 function formatPricePerUnit(
-  offer: Pick<
-    Offer,
-    "pricePerUnit"
-  >,
+  offer: Pick<Offer, "pricePerUnit">,
 ) {
   if (
-    typeof offer.pricePerUnit !==
-      "number" ||
-    Number.isNaN(
-      offer.pricePerUnit,
-    )
+    typeof offer.pricePerUnit !== "number" ||
+    Number.isNaN(offer.pricePerUnit)
   ) {
     return "—";
   }
 
-  return `$${offer.pricePerUnit.toFixed(
-    2,
-  )}`;
+  return `$${offer.pricePerUnit.toFixed(2)}`;
 }
 
-function formatUsdFromMxn(
-  mxn: number,
-) {
-  const usd =
-    mxn * MXN_TO_USD;
+function formatUsdFromMxn(mxn: number) {
+  const usd = mxn * MXN_TO_USD;
 
   return `US$${usd.toFixed(2)}`;
 }
@@ -2214,68 +1921,42 @@ function formatUsdFromMxn(
    DATE
    ========================================================= */
 
-function formatDate(
-  date: string,
-) {
+function formatDate(date: string) {
   if (!date) {
     return "Fecha no disponible";
   }
 
-  const parsedDate =
-    new Date(
-      `${date}T12:00:00`,
-    );
+  const parsedDate = new Date(`${date}T12:00:00`);
 
-  if (
-    Number.isNaN(
-      parsedDate.getTime(),
-    )
-  ) {
+  if (Number.isNaN(parsedDate.getTime())) {
     return date;
   }
 
-  return new Intl.DateTimeFormat(
-    "es-MX",
-    {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    },
-  ).format(parsedDate);
+  return new Intl.DateTimeFormat("es-MX", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(parsedDate);
 }
 
 /* =========================================================
    RELATION LABEL
    ========================================================= */
 
-function shortRelationLabel(
-  relation: string,
-) {
-  if (
-    relation.includes(
-      "different-quantity",
-    )
-  ) {
+function shortRelationLabel(relation: string) {
+  if (relation.includes("different-quantity")) {
     return "Misma composición, otra cantidad";
   }
 
-  if (
-    relation.includes(
-      "different-form",
-    )
-  ) {
+  if (relation.includes("different-form")) {
     return "Misma composición, otra presentación";
   }
 
-  if (
-    relation.includes(
-      "different-presentation",
-    )
-  ) {
+  if (relation.includes("different-presentation")) {
     return "Misma composición, otra presentación";
   }
 
-  return "Presentación relacionada";
+  return "Otra presentación que encontramos";
 }
 
 /* =========================================================
